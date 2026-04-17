@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">PROG7313</string>
+    <string name="title_activity_login_activity.kt">LoginActivity.kt</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="welcome">Welcome!</string>
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:name=".PROG7313Application"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="PROG7313 Budget Tracker"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PROG7313"
+        tools:targetApi="31"
+        tools:ignore="Instantiatable">
+
+        <!-- LoginActivity is the FIRST screen users see -->
+        <activity
+            android:name=".ui.Login.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Main dashboard -->
+        <activity
+            android:name=".ui.Main.MainActivity"
+            android:exported="false" />
+
+        <!-- Category management -->
+        <activity
+            android:name=".ui.Category.CategoryActivity"
+            android:exported="false" />
+
+        <!-- Expense entry -->
+        <activity
+            android:name=".ui.Expense.ExpenseActivity"
+            android:exported="false" />
+
+    </application>
+
+</manifest>
