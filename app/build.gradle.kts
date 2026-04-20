@@ -42,7 +42,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     // Navigation
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
