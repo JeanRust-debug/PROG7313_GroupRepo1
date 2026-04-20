@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/categoryFragment"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/categories" />
+
+    <item
+        android:id="@+id/expenseFragment"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/expenses" />
+
+    <item
+        android:id="@+id/budgetGoalFragment"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="@string/budget_goals" />
+
+</menu>
