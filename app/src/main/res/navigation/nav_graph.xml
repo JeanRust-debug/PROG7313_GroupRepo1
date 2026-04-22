@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/dashboardFragment">
+    app:startDestination="@id/categoryFragment">
 
-    <fragment android:id="@+id/dashboardFragment"
-        android:name="com.clearcash.app.ui.dashboard.DashboardFragment"
-        android:label="Dashboard" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.clearcash.ui.category.CategoryFragment"
+        android:label="Categories"
+        tools:layout="@layout/fragment_category" />
 
-    <fragment android:id="@+id/expenseListFragment"
-        android:name="com.clearcash.app.ui.expense.ExpenseListFragment"
-        android:label="Expenses" />
+    <fragment
+        android:id="@+id/expenseFragment"
+        android:name="com.example.clearcash.ui.expense.ExpenseFragment"
+        android:label="Expenses"
+        tools:layout="@layout/fragment_expense" />
 
-    <fragment android:id="@+id/categoryFragment"
-        android:name="com.clearcash.app.ui.category.CategoryFragment"
-        android:label="Categories" />
+    <fragment
+        android:id="@+id/reportsFragment"
+        android:name="com.example.clearcash.ui.reports.ReportsFragment"
+        android:label="Reports"
+        tools:layout="@layout/fragment_reports" />
 
-    <fragment android:id="@+id/spendingGraphFragment"
-        android:name="com.clearcash.app.ui.graph.SpendingGraphFragment"
-        android:label="Spending Graph" />
+    <fragment
+        android:id="@+id/budgetGoalFragment"
+        android:name="com.example.clearcash.ui.budget.BudgetGoalFragment"
+        android:label="Budget Goals"
+        tools:layout="@layout/fragment_budget_goal" />
 
-    <fragment android:id="@+id/rewardsFragment"
-        android:name="com.clearcash.app.ui.rewards.RewardsFragment"
-        android:label="Rewards" />
 </navigation>

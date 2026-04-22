@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/dashboardFragment"      android:title="Home"       android:icon="@android:drawable/ic_menu_today" />
-    <item android:id="@+id/expenseListFragment"    android:title="Expenses"   android:icon="@android:drawable/ic_menu_agenda" />
-    <item android:id="@+id/categoryFragment"       android:title="Categories" android:icon="@android:drawable/ic_menu_manage" />
-    <item android:id="@+id/spendingGraphFragment"  android:title="Graph"      android:icon="@android:drawable/ic_menu_zoom" />
-    <item android:id="@+id/rewardsFragment"        android:title="Rewards"    android:icon="@android:drawable/btn_star_big_on" />
+
+    <item
+        android:id="@+id/categoryFragment"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/categories" />
+
+    <item
+        android:id="@+id/expenseFragment"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/expenses" />
+
+    <item
+        android:id="@+id/reportsFragment"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="@string/reports" />
+
+    <item
+        android:id="@+id/budgetGoalFragment"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="@string/budget_goals" />
+
 </menu>
