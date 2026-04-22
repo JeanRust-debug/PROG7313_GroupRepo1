@@ -1,5 +1,5 @@
 package com.example.clearcash.ui.expense
-
+import com.example.clearcash.util.ValidationUtils
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
@@ -233,39 +233,32 @@ class ExpenseFragment : Fragment() {
         val amountStr = binding.etAmount.text.toString().trim()
         val description = binding.etDescription.text.toString().trim()
 
-        // Validate amount
-        if (amountStr.isEmpty()) {
-            binding.tilAmount.error = "Amount is required"
-            return
-        } else {
-            binding.tilAmount.error = null
-        }
-
-        val amount = amountStr.toDoubleOrNull()
-        if (amount == null || amount <= 0) {
-            binding.tilAmount.error = "Enter a valid amount"
+        // Validate amount using ValidationUtils
+        val amountError = ValidationUtils.validateAmount(amountStr)
+        if (amountError != null) {
+            binding.tilAmount.error = amountError
             return
         } else {
             binding.tilAmount.error = null
         }
 
         // Validate description
-        if (description.isEmpty()) {
-            binding.tilDescription.error = "Description is required"
+        val descError = ValidationUtils.validateRequired(description, "Description")
+        if (descError != null) {
+            binding.tilDescription.error = descError
             return
         } else {
             binding.tilDescription.error = null
         }
 
-        // Validate category selection
+        // Validate category
         if (selectedCategoryId == -1) {
             Toast.makeText(requireContext(), "Please select a category", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Create and save expense
         val expense = Expense(
-            amount = amount,
+            amount = amountStr.toDouble(),
             date = selectedDate,
             description = description,
             categoryId = selectedCategoryId,
@@ -274,7 +267,7 @@ class ExpenseFragment : Fragment() {
 
         expenseViewModel.insertExpense(expense)
 
-        // Clear inputs
+        // Clear all inputs after save
         binding.etAmount.text?.clear()
         binding.etDescription.text?.clear()
         binding.actvCategory.text?.clear()
@@ -283,8 +276,12 @@ class ExpenseFragment : Fragment() {
         selectedCategoryId = -1
         selectedDate = System.currentTimeMillis()
 
+        // Reset date display
+        val dateFormat = java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault())
+        binding.etDate.setText(dateFormat.format(java.util.Date(selectedDate)))
+
         Toast.makeText(requireContext(), "Expense saved!", Toast.LENGTH_SHORT).show()
-        Log.d(TAG, "Expense saved: R$amount - $description")
+        Log.d(TAG, "Expense saved: R${amountStr.toDouble()} - $description")
     }
 
     override fun onDestroyView() {

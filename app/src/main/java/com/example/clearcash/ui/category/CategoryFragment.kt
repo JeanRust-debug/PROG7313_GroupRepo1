@@ -1,5 +1,5 @@
 package com.example.clearcash.ui.category
-
+import com.example.clearcash.util.ValidationUtils
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -81,23 +81,31 @@ class CategoryFragment : Fragment() {
         val name = binding.etCategoryName.text.toString().trim()
         val limitStr = binding.etCategoryLimit.text.toString().trim()
 
-        // Validate category name
-        if (name.isEmpty()) {
-            binding.tilCategoryName.error = "Category name is required"
-            Log.w(TAG, "Save attempted with empty category name")
+        // Use ValidationUtils for consistent validation
+        val nameError = ValidationUtils.validateCategoryName(name)
+        if (nameError != null) {
+            binding.tilCategoryName.error = nameError
+            Log.w(TAG, "Validation failed: $nameError")
             return
         } else {
             binding.tilCategoryName.error = null
         }
 
-        // Parse limit — default to 0 if empty
-        val limit = if (limitStr.isEmpty()) 0.0 else limitStr.toDoubleOrNull() ?: 0.0
+        // Validate limit only if provided
+        if (limitStr.isNotEmpty()) {
+            val limitError = ValidationUtils.validateAmount(limitStr)
+            if (limitError != null) {
+                binding.tilCategoryLimit.error = limitError
+                return
+            } else {
+                binding.tilCategoryLimit.error = null
+            }
+        }
 
-        // Create and insert the category
+        val limit = if (limitStr.isEmpty()) 0.0 else limitStr.toDouble()
         val category = Category(name = name, limit = limit)
         viewModel.insertCategory(category)
 
-        // Clear inputs after saving
         binding.etCategoryName.text?.clear()
         binding.etCategoryLimit.text?.clear()
 
