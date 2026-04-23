@@ -98,6 +98,11 @@ class ExpenseFragment : Fragment() {
         setupDatePicker()
         setupCategoryDropdown()
         setupExpenseList()
+        // Request camera permission at runtime
+        if (requireContext().checkSelfPermission(android.Manifest.permission.CAMERA)
+            != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 100)
+        }
         setupButtons()
     }
 
@@ -182,6 +187,8 @@ class ExpenseFragment : Fragment() {
     /**
      * Sets up save and photo attachment buttons.
      */
+
+
     private fun setupButtons() {
         // Photo attachment — show camera or gallery choice
         binding.btnAttachPhoto.setOnClickListener {
@@ -213,17 +220,23 @@ class ExpenseFragment : Fragment() {
      * Creates a temporary file and launches the camera.
      */
     private fun launchCamera() {
-        val photoFile = File.createTempFile(
-            "receipt_${System.currentTimeMillis()}",
-            ".jpg",
-            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        )
-        cameraPhotoUri = FileProvider.getUriForFile(
-            requireContext(),
-            "${requireContext().packageName}.fileprovider",
-            photoFile
-        )
-        cameraLauncher.launch(cameraPhotoUri)
+        try {
+            val photoFile = File.createTempFile(
+                "receipt_${System.currentTimeMillis()}",
+                ".jpg",
+                requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            )
+            cameraPhotoUri = FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.fileprovider",
+                photoFile
+            )
+            photoPath = photoFile.absolutePath
+            cameraLauncher.launch(cameraPhotoUri)
+        } catch (e: Exception) {
+            Log.e(TAG, "Camera launch failed: ${e.message}")
+            Toast.makeText(requireContext(), "Camera unavailable", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**

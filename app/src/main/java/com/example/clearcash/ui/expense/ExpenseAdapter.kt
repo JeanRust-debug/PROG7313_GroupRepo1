@@ -1,5 +1,5 @@
 package com.example.clearcash.ui.expense
-
+import android.view.View
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -38,15 +38,20 @@ class ExpenseAdapter(
             // Look up category name from map
             binding.tvExpenseCategory.text = categoryNames[expense.categoryId] ?: "Unknown"
 
-            // Load receipt photo if available using Glide
+            // Load receipt photo if available
             if (!expense.photoPath.isNullOrEmpty()) {
                 val file = File(expense.photoPath)
                 if (file.exists()) {
+                    binding.ivReceiptThumb.visibility = View.VISIBLE
                     Glide.with(binding.root.context)
                         .load(file)
                         .centerCrop()
                         .into(binding.ivReceiptThumb)
+                } else {
+                    binding.ivReceiptThumb.visibility = View.GONE
                 }
+            } else {
+                binding.ivReceiptThumb.visibility = View.GONE
             }
 
             // Handle item click to view full receipt

@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
+import com.example.clearcash.util.DateUtils
 /**
  * Fragment for setting and viewing monthly budget goals.
  * Displays current month's min/max goals and spending progress.
@@ -25,7 +25,8 @@ import java.util.Locale
 class BudgetGoalFragment : Fragment() {
 
     private val TAG = "BudgetGoalFragment"
-
+    // Stores the existing goal's ID so we can update instead of insert
+    private var existingGoalId: Int = 0
     private var _binding: FragmentBudgetGoalBinding? = null
     private val binding get() = _binding!!
 
@@ -84,7 +85,9 @@ class BudgetGoalFragment : Fragment() {
         budgetGoalViewModel.getBudgetGoalForMonth(currentMonth)
             .observe(viewLifecycleOwner) { goal ->
                 if (goal != null) {
-                    // Show the current goal card
+                    // Save the existing ID for updates
+                    existingGoalId = goal.id
+
                     binding.cardCurrentGoal.visibility = View.VISIBLE
                     binding.tvMinGoalDisplay.text = "R%.2f".format(goal.minGoal)
                     binding.tvMaxGoalDisplay.text = "R%.2f".format(goal.maxGoal)
@@ -93,8 +96,9 @@ class BudgetGoalFragment : Fragment() {
                     binding.etMinGoal.setText(goal.minGoal.toString())
                     binding.etMaxGoal.setText(goal.maxGoal.toString())
 
-                    Log.d(TAG, "Current goal loaded: min=${goal.minGoal} max=${goal.maxGoal}")
+                    Log.d(TAG, "Current goal loaded: id=$existingGoalId min=${goal.minGoal} max=${goal.maxGoal}")
                 } else {
+                    existingGoalId = 0
                     binding.cardCurrentGoal.visibility = View.GONE
                 }
             }
@@ -104,36 +108,31 @@ class BudgetGoalFragment : Fragment() {
      * Observes total spending this month and updates the progress bar.
      */
     private fun observeSpendingProgress() {
-        // Get start and end of current month as timestamps
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        val startOfMonth = calendar.timeInMillis
+        val startOfMonth = DateUtils.getStartOfCurrentMonth()
+        val endOfMonth = DateUtils.getEndOfCurrentMonth()
 
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 59)
-        val endOfMonth = calendar.timeInMillis
-
-        // Observe category totals to calculate total spending
+        // Observe spending totals only — no nested observer
         expenseViewModel.getCategoryTotals(startOfMonth, endOfMonth)
             .observe(viewLifecycleOwner) { totals ->
                 val totalSpent = totals.sumOf { it.total }
+                Log.d(TAG, "Total spent this month: R$totalSpent")
 
-                // Update progress bar against max goal
-                budgetGoalViewModel.getBudgetGoalForMonth(currentMonth)
-                    .observe(viewLifecycleOwner) { goal ->
-                        if (goal != null && goal.maxGoal > 0) {
-                            val progress = ((totalSpent / goal.maxGoal) * 100).toInt()
-                                .coerceIn(0, 100)
+                // Update progress label independently
+                binding.tvProgressLabel.text = "R%.2f spent this month".format(totalSpent)
+
+                // Update progress bar if we already have a max goal displayed
+                val maxText = binding.tvMaxGoalDisplay.text.toString()
+                if (maxText.isNotEmpty() && maxText != "") {
+                    try {
+                        val maxGoal = maxText.removePrefix("R").toDouble()
+                        if (maxGoal > 0) {
+                            val progress = ((totalSpent / maxGoal) * 100).toInt().coerceIn(0, 100)
                             binding.progressBudget.progress = progress
-                            binding.tvProgressLabel.text =
-                                "R%.2f spent of R%.2f max (${progress}%)"
-                                    .format(totalSpent, goal.maxGoal)
-                            Log.d(TAG, "Spending progress: $progress%")
                         }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Progress calculation error: ${e.message}")
                     }
+                }
             }
     }
 
@@ -144,7 +143,6 @@ class BudgetGoalFragment : Fragment() {
         val minStr = binding.etMinGoal.text.toString().trim()
         val maxStr = binding.etMaxGoal.text.toString().trim()
 
-        // Validate min goal
         if (minStr.isEmpty()) {
             binding.tilMinGoal.error = "Minimum goal is required"
             return
@@ -152,7 +150,6 @@ class BudgetGoalFragment : Fragment() {
             binding.tilMinGoal.error = null
         }
 
-        // Validate max goal
         if (maxStr.isEmpty()) {
             binding.tilMaxGoal.error = "Maximum goal is required"
             return
@@ -173,7 +170,6 @@ class BudgetGoalFragment : Fragment() {
             return
         }
 
-        // Make sure min is less than max
         if (minGoal >= maxGoal) {
             binding.tilMaxGoal.error = "Maximum must be greater than minimum"
             return
@@ -181,16 +177,17 @@ class BudgetGoalFragment : Fragment() {
             binding.tilMaxGoal.error = null
         }
 
-        // Save budget goal
+        // Use existingGoalId so Room UPDATES instead of inserting a duplicate
         val budgetGoal = BudgetGoal(
+            id = existingGoalId,
             month = currentMonth,
             minGoal = minGoal,
             maxGoal = maxGoal
         )
 
         budgetGoalViewModel.insertBudgetGoal(budgetGoal)
-        Toast.makeText(requireContext(), "Budget goal saved!", Toast.LENGTH_SHORT).show()
-        Log.d(TAG, "Budget goal saved: min=R$minGoal max=R$maxGoal for $currentMonth")
+        Toast.makeText(requireContext(), "Budget goal updated!", Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "Budget goal saved: id=$existingGoalId min=R$minGoal max=R$maxGoal")
     }
 
     override fun onDestroyView() {
