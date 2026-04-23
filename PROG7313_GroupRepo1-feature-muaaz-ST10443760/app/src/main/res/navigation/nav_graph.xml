@@ -3,8 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/categoryFragment">
+    app:startDestination="@id/loginFragment">
 
+    <!-- Login screen (new start destination) -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.clearcash.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <!-- Register screen -->
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.clearcash.ui.auth.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register" />
+
+    <!-- Main app screens -->
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.example.clearcash.ui.category.CategoryFragment"
