@@ -18,7 +18,7 @@ import com.example.clearcash.data.db.entities.User
  * Singleton pattern ensures only one instance exists at a time.
  * Updated to include User entity for authentication.
  * Author: Muaaz Abdool Gaffoor (ST10443760)
- * Author: Diya Maharaj ST10327888
+ * Author: Diya Maharaj ST10327888 (updated the AppDatabase)
  */
 @Database(
     entities = [Category::class, Expense::class, BudgetGoal::class, User::class],
