@@ -3,6 +3,9 @@ package com.example.clearcash
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.clearcash.databinding.ActivityMainBinding
 
@@ -13,25 +16,39 @@ import com.example.clearcash.databinding.ActivityMainBinding
  */
 class MainActivity : AppCompatActivity() {
 
-    // ViewBinding for activity_main layout
     private lateinit var binding: ActivityMainBinding
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Inflate layout using ViewBinding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set up the toolbar
         setSupportActionBar(binding.toolbar)
 
-        // Get the NavController from the NavHostFragment
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Connect bottom navigation to NavController
+        // Top level destinations — no back button on these
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.categoryFragment,
+                R.id.expenseFragment,
+                R.id.budgetGoalFragment
+            )
+        )
+
+        // Connects toolbar to nav so back button appears automatically
+        setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
+    }
+
+    // Handles the back button press in the toolbar
+    override fun onSupportNavigateUp(): Boolean {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        return navHostFragment.navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 }

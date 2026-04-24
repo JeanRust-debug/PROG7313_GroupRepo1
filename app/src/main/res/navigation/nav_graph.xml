@@ -15,7 +15,31 @@
         android:id="@+id/expenseFragment"
         android:name="com.example.clearcash.ui.expense.ExpenseFragment"
         android:label="Expenses"
-        tools:layout="@layout/fragment_expense" />
+        tools:layout="@layout/fragment_expense">
+
+        <action
+            android:id="@+id/action_expenseFragment_to_expenseDetailFragment"
+            app:destination="@id/expenseDetailFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/expenseDetailFragment"
+        android:name="com.example.clearcash.ui.expense.ExpenseDetailFragment"
+        android:label="Expense Detail"
+        tools:layout="@layout/fragment_expense_detail">
+
+        <argument android:name="amount" app:argType="float" />
+        <argument android:name="date" app:argType="long" />
+        <argument android:name="description" app:argType="string" />
+        <argument android:name="categoryId" app:argType="integer" />
+        <argument
+            android:name="photoPath"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/budgetGoalFragment"

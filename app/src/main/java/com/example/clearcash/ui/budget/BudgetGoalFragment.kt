@@ -111,28 +111,29 @@ class BudgetGoalFragment : Fragment() {
         val startOfMonth = DateUtils.getStartOfCurrentMonth()
         val endOfMonth = DateUtils.getEndOfCurrentMonth()
 
-        // Observe spending totals only — no nested observer
         expenseViewModel.getCategoryTotals(startOfMonth, endOfMonth)
             .observe(viewLifecycleOwner) { totals ->
                 val totalSpent = totals.sumOf { it.total }
                 Log.d(TAG, "Total spent this month: R$totalSpent")
 
-                // Update progress label independently
-                binding.tvProgressLabel.text = "R%.2f spent this month".format(totalSpent)
+                // Always update the progress label
+                budgetGoalViewModel.getBudgetGoalForMonth(currentMonth)
+                    .removeObservers(viewLifecycleOwner)
 
-                // Update progress bar if we already have a max goal displayed
-                val maxText = binding.tvMaxGoalDisplay.text.toString()
-                if (maxText.isNotEmpty() && maxText != "") {
-                    try {
-                        val maxGoal = maxText.removePrefix("R").toDouble()
-                        if (maxGoal > 0) {
-                            val progress = ((totalSpent / maxGoal) * 100).toInt().coerceIn(0, 100)
+                budgetGoalViewModel.getBudgetGoalForMonth(currentMonth)
+                    .observe(viewLifecycleOwner) { goal ->
+                        if (goal != null && binding.cardCurrentGoal.visibility == View.VISIBLE) {
+                            val progress = if (goal.maxGoal > 0) {
+                                ((totalSpent / goal.maxGoal) * 100).toInt().coerceIn(0, 100)
+                            } else 0
                             binding.progressBudget.progress = progress
+                            binding.tvProgressLabel.text =
+                                "R%.2f spent of R%.2f max (%d%%)".format(
+                                    totalSpent, goal.maxGoal, progress
+                                )
+                            Log.d(TAG, "Progress updated: $progress%")
                         }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Progress calculation error: ${e.message}")
                     }
-                }
             }
     }
 

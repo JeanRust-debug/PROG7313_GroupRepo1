@@ -1,4 +1,5 @@
 package com.example.clearcash.ui.expense
+
 import android.view.View
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,12 +16,13 @@ import java.util.Locale
 
 /**
  * RecyclerView Adapter for displaying expense entries.
- * Shows receipt photo thumbnail if available.
+ * Shows receipt photo thumbnail if available, supports delete.
  * Author: Muaaz Abdool Gaffoor (ST10443760)
  */
 class ExpenseAdapter(
     private val categoryNames: Map<Int, String>,
-    private val onItemClick: (Expense) -> Unit
+    private val onItemClick: (Expense) -> Unit,
+    private val onDeleteClick: (Expense) -> Unit
 ) : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(DiffCallback()) {
 
     inner class ExpenseViewHolder(
@@ -28,34 +30,32 @@ class ExpenseAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(expense: Expense) {
-            // Format date from timestamp
             val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
             binding.tvExpenseDate.text = dateFormat.format(Date(expense.date))
-
             binding.tvExpenseDescription.text = expense.description
             binding.tvExpenseAmount.text = "R%.2f".format(expense.amount)
-
-            // Look up category name from map
             binding.tvExpenseCategory.text = categoryNames[expense.categoryId] ?: "Unknown"
 
-            // Load receipt photo if available
-            if (!expense.photoPath.isNullOrEmpty()) {
-                val file = File(expense.photoPath)
+            // Load photo if path exists and file is accessible
+            val path = expense.photoPath
+            if (!path.isNullOrEmpty()) {
+                val file = File(path)
                 if (file.exists()) {
-                    binding.ivReceiptThumb.visibility = View.VISIBLE
                     Glide.with(binding.root.context)
                         .load(file)
                         .centerCrop()
+                        .placeholder(android.R.drawable.ic_menu_camera)
+                        .error(android.R.drawable.ic_menu_camera)
                         .into(binding.ivReceiptThumb)
                 } else {
-                    binding.ivReceiptThumb.visibility = View.GONE
+                    binding.ivReceiptThumb.setImageResource(android.R.drawable.ic_menu_camera)
                 }
             } else {
-                binding.ivReceiptThumb.visibility = View.GONE
+                binding.ivReceiptThumb.setImageResource(android.R.drawable.ic_menu_camera)
             }
 
-            // Handle item click to view full receipt
             binding.root.setOnClickListener { onItemClick(expense) }
+            binding.btnDeleteExpense.setOnClickListener { onDeleteClick(expense) }
         }
     }
 

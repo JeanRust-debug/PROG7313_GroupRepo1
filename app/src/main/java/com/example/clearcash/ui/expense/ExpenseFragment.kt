@@ -26,6 +26,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import androidx.navigation.fragment.findNavController
+import com.example.clearcash.R
+
 
 /**
  * Fragment for adding and viewing expense entries.
@@ -62,11 +65,28 @@ class ExpenseFragment : Fragment() {
         ActivityResultContracts.TakePicture()
     ) { success ->
         if (success) {
-            // Show preview of captured photo
-            photoPath = cameraPhotoUri?.path
-            Glide.with(this).load(cameraPhotoUri).into(binding.ivReceiptPreview)
-            binding.ivReceiptPreview.visibility = View.VISIBLE
-            Log.d(TAG, "Photo captured: $photoPath")
+            cameraPhotoUri?.let { uri ->
+                try {
+                    // Copy camera photo to permanent location just like gallery
+                    val permanentFile = File.createTempFile(
+                        "receipt_saved_${System.currentTimeMillis()}",
+                        ".jpg",
+                        requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    )
+                    requireContext().contentResolver.openInputStream(uri)?.use { input ->
+                        permanentFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    photoPath = permanentFile.absolutePath
+                    Glide.with(this).load(permanentFile).into(binding.ivReceiptPreview)
+                    binding.ivReceiptPreview.visibility = View.VISIBLE
+                    Log.d(TAG, "Camera photo saved permanently: $photoPath")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to save camera photo: ${e.message}")
+                    Toast.makeText(requireContext(), "Failed to save photo", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -75,10 +95,21 @@ class ExpenseFragment : Fragment() {
         ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
-            photoPath = it.toString()
-            Glide.with(this).load(it).into(binding.ivReceiptPreview)
+            // Copy to local file so we can load it later
+            val photoFile = File.createTempFile(
+                "receipt_${System.currentTimeMillis()}",
+                ".jpg",
+                requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            )
+            requireContext().contentResolver.openInputStream(it)?.use { input ->
+                photoFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            photoPath = photoFile.absolutePath
+            Glide.with(this).load(photoFile).into(binding.ivReceiptPreview)
             binding.ivReceiptPreview.visibility = View.VISIBLE
-            Log.d(TAG, "Photo selected from gallery: $photoPath")
+            Log.d(TAG, "Photo copied from gallery: $photoPath")
         }
     }
 
@@ -160,12 +191,31 @@ class ExpenseFragment : Fragment() {
         categoryViewModel.allCategories.observe(viewLifecycleOwner) { categories ->
             val categoryNamesById = categories.associate { it.id to it.name }
 
-            val adapter = ExpenseAdapter(categoryNamesById) { expense ->
-                // Show receipt photo on click if available
-                expense.photoPath?.let { path ->
-                    Toast.makeText(requireContext(), "Receipt: $path", Toast.LENGTH_SHORT).show()
+            val adapter = ExpenseAdapter(
+                categoryNames = categoryNamesById,
+                onItemClick = { expense ->
+                    val bundle = Bundle().apply {
+                        putFloat("amount", expense.amount.toFloat())
+                        putLong("date", expense.date)
+                        putString("description", expense.description)
+                        putInt("categoryId", expense.categoryId)
+                        putString("photoPath", expense.photoPath)
+                    }
+                    findNavController().navigate(
+                        R.id.action_expenseFragment_to_expenseDetailFragment,
+                        bundle
+                    )
+                },
+                onDeleteClick = { expense ->
+                    expenseViewModel.deleteExpense(expense)
+                    Toast.makeText(
+                        requireContext(),
+                        "${expense.description} deleted",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.d(TAG, "Deleted expense: ${expense.description}")
                 }
-            }
+            )
 
             binding.rvExpenses.layoutManager = LinearLayoutManager(requireContext())
             binding.rvExpenses.adapter = adapter
@@ -183,7 +233,6 @@ class ExpenseFragment : Fragment() {
             }
         }
     }
-
     /**
      * Sets up save and photo attachment buttons.
      */
