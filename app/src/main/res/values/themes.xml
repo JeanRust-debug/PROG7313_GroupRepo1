@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-        Base app theme. Parent changed from DayNight to Light so the app
-        doesn't invert colors on phones running in dark mode — that was
-        making text boxes white-on-white and therefore invisible.
-    -->
     <style name="Theme.ClearCash" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:windowBackground">@color/background</item>
-
-        <!-- Force light content across the app so system dark mode
-             on the device doesn't swap our text colors to white -->
-        <item name="android:textColorPrimary">@color/dark_grey</item>
-        <item name="android:textColorSecondary">@color/dark_grey</item>
-
-        <!-- Apply our custom input style globally so every
-             TextInputLayout in the app picks up the same look -->
-        <item name="textInputStyle">@style/ClearCash.TextInput</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:editTextColor">@color/dark_grey</item>
     </style>
 
     <style name="ClearCash.Button" parent="Widget.MaterialComponents.Button">
@@ -33,30 +21,9 @@
         <item name="cardBackgroundColor">@color/card_background</item>
     </style>
 
-    <!--
-        Outlined text input style.
-        Explicitly sets every color layer so the field renders correctly on
-        every device, even when the phone is in dark mode:
-          - boxStrokeColor — the outline around the field
-          - hintTextColor — the floating label when focused
-          - android:textColorHint — the placeholder text inside the box
-          - android:textColor is applied on the child EditText below
-    -->
     <style name="ClearCash.TextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/primary</item>
         <item name="hintTextColor">@color/primary</item>
         <item name="android:textColorHint">@color/mid_grey</item>
-        <item name="materialThemeOverlay">@style/ClearCash.TextInput.Overlay</item>
-    </style>
-
-    <!--
-        Theme overlay that applies only to the inner EditText of a TextInputLayout.
-        Forces the typed text to be dark and the cursor to match the primary color.
-    -->
-    <style name="ClearCash.TextInput.Overlay" parent="">
-        <item name="colorControlNormal">@color/primary</item>
-        <item name="colorControlActivated">@color/primary</item>
-        <item name="android:textColor">@color/dark_grey</item>
-        <item name="android:textColorPrimary">@color/dark_grey</item>
     </style>
 </resources>
