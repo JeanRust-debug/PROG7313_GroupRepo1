@@ -1,19 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!--
-        Night theme — intentionally identical to the day theme.
-        We don't want the app to flip colors in dark mode; our custom palette
-        is designed for a light background.
-    -->
-    <style name="Theme.ClearCash" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:windowBackground">@color/background</item>
-
-        <item name="android:textColorPrimary">@color/dark_grey</item>
-        <item name="android:textColorSecondary">@color/dark_grey</item>
-
-        <item name="textInputStyle">@style/ClearCash.TextInput</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ClearCash" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 </resources>
