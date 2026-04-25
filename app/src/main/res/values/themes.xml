@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.ClearCash" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.ClearCash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/navy_primary</item>
         <item name="colorPrimaryVariant">@color/blue_accent</item>
         <item name="colorOnPrimary">@color/white</item>

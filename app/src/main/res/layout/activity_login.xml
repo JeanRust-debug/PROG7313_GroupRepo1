@@ -15,26 +15,36 @@
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsername"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp" android:layout_height="wrap_content"
-        android:hint="USERNAME" app:boxStrokeColor="@color/navy_primary"
+        android:hint="USERNAME"
+        app:boxStrokeColor="@color/navy_primary"
+        app:hintTextColor="@color/navy_primary"
+        android:textColorHint="#9E9E9E"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp">
         <com.google.android.material.textfield.TextInputEditText android:id="@+id/etUsername"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:inputType="text" android:imeOptions="actionNext" />
+            android:inputType="text" android:imeOptions="actionNext"
+            android:textColor="@color/navy_primary"
+            android:textCursorDrawable="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilPassword"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp" android:layout_height="wrap_content"
-        android:hint="PASSWORD" app:passwordToggleEnabled="true"
+        android:hint="PASSWORD"
+        app:endIconMode="password_toggle"
         app:boxStrokeColor="@color/navy_primary"
+        app:hintTextColor="@color/navy_primary"
+        android:textColorHint="#9E9E9E"
         app:layout_constraintTop_toBottomOf="@id/tilUsername"
         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp">
         <com.google.android.material.textfield.TextInputEditText android:id="@+id/etPassword"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:inputType="textPassword" android:imeOptions="actionDone" />
+            android:inputType="textPassword" android:imeOptions="actionDone"
+            android:textColor="@color/navy_primary"
+            android:textCursorDrawable="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton android:id="@+id/btnLogin"
@@ -49,6 +59,8 @@
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="Create An Account" android:textColor="@color/blue_accent"
         android:padding="8dp" android:textSize="14sp"
+        android:clickable="true" android:focusable="true"
+        android:background="?attr/selectableItemBackground"
         app:layout_constraintTop_toBottomOf="@id/btnLogin"
         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
