@@ -12,26 +12,44 @@
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
         android:text="MINIMUM SPENDING GOAL" android:textStyle="bold"
         android:textColor="@color/navy_primary" android:layout_marginTop="32dp"/>
+
     <SeekBar android:id="@+id/seekBarMin"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" android:progressTint="@color/success_green"
-        android:thumbTint="@color/success_green"/>
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:max="50000"
+        android:progress="0"
+        android:progressTint="@color/success_green"
+        android:progressBackgroundTint="#D0D0D0"
+        android:thumb="@drawable/seekbar_thumb_green"
+        android:splitTrack="false"
+        android:layout_marginTop="12dp"/>
+
     <TextView android:id="@+id/tvMinValue"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:gravity="center" android:textSize="20sp" android:textStyle="bold"
-        android:textColor="@color/success_green" android:layout_marginTop="4dp" android:text="R 0"/>
+        android:textColor="@color/success_green"
+        android:layout_marginTop="4dp" android:text="R 0"/>
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
         android:text="MAXIMUM SPENDING LIMIT" android:textStyle="bold"
         android:textColor="@color/navy_primary" android:layout_marginTop="32dp"/>
+
     <SeekBar android:id="@+id/seekBarMax"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" android:progressTint="@color/error_red"
-        android:thumbTint="@color/error_red"/>
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:max="50000"
+        android:progress="0"
+        android:progressTint="@color/error_red"
+        android:progressBackgroundTint="#D0D0D0"
+        android:thumb="@drawable/seekbar_thumb_red"
+        android:splitTrack="false"
+        android:layout_marginTop="12dp"/>
+
     <TextView android:id="@+id/tvMaxValue"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:gravity="center" android:textSize="20sp" android:textStyle="bold"
-        android:textColor="@color/error_red" android:layout_marginTop="4dp" android:text="R 0"/>
+        android:textColor="@color/error_red"
+        android:layout_marginTop="4dp" android:text="R 0"/>
 
     <com.google.android.material.button.MaterialButton android:id="@+id/btnSave"
         android:layout_width="match_parent" android:layout_height="56dp"
