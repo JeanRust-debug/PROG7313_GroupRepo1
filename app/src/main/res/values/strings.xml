@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ClearCash</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="expenses">Expenses</string>
+    <string name="categories">Categories</string>
+    <string name="graph">Graph</string>
+    <string name="rewards">Rewards</string>
+    <string name="budget_saver">Budget Saver</string>
+    <string name="expense_logger">Expense Logger</string>
+    <string name="smart_spender">Smart Spender</string>
+</resources>
