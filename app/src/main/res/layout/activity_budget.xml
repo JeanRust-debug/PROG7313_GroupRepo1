@@ -1,46 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="24dp"
-    android:background="@color/background">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="SET MONTHLY BUDGET" android:textStyle="bold" android:textSize="18sp"
-        android:textColor="@color/navy_primary"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/navy_primary"
+            android:titleTextColor="@color/white"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="MINIMUM SPENDING GOAL" android:textStyle="bold"
-        android:textColor="@color/navy_primary" android:layout_marginTop="32dp"/>
-    <SeekBar android:id="@+id/seekBarMin"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" android:progressTint="@color/success_green"
-        android:thumbTint="@color/success_green"/>
-    <TextView android:id="@+id/tvMinValue"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:gravity="center" android:textSize="20sp" android:textStyle="bold"
-        android:textColor="@color/success_green" android:layout_marginTop="4dp" android:text="R 0"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="MAXIMUM SPENDING LIMIT" android:textStyle="bold"
-        android:textColor="@color/navy_primary" android:layout_marginTop="32dp"/>
-    <SeekBar android:id="@+id/seekBarMax"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" android:progressTint="@color/error_red"
-        android:thumbTint="@color/error_red"/>
-    <TextView android:id="@+id/tvMaxValue"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:gravity="center" android:textSize="20sp" android:textStyle="bold"
-        android:textColor="@color/error_red" android:layout_marginTop="4dp" android:text="R 0"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-    <com.google.android.material.button.MaterialButton android:id="@+id/btnSave"
-        android:layout_width="match_parent" android:layout_height="56dp"
-        android:text="SAVE BUDGET" android:textSize="16sp"
-        app:backgroundTint="@color/navy_primary" app:cornerRadius="8dp"
-        android:layout_marginTop="40dp"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="SET MONTHLY BUDGET" android:textStyle="bold" android:textSize="18sp"
+                android:textColor="@color/navy_primary"/>
 
-    <ProgressBar android:id="@+id/progressBar"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_gravity="center" android:visibility="gone"
-        android:layout_marginTop="8dp"/>
+            <!-- ── MINIMUM GOAL ─────────────────────────────────────── -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="MINIMUM SPENDING GOAL" android:textStyle="bold"
+                android:textColor="@color/navy_primary" android:layout_marginTop="32dp"/>
+
+            <SeekBar android:id="@+id/seekBarMin"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:max="100000"
+                android:progress="0"
+                android:progressTint="@color/success_green"
+                android:progressBackgroundTint="#D0D0D0"
+                android:thumb="@drawable/seekbar_thumb_green"
+                android:splitTrack="false"
+                android:layout_marginTop="12dp"/>
+
+            <TextView android:id="@+id/tvMinValue"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center" android:textSize="20sp" android:textStyle="bold"
+                android:textColor="@color/success_green"
+                android:layout_marginTop="4dp" android:text="R 0"/>
+
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilMinInput"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:hint="Or enter amount (R)"
+                app:boxStrokeColor="@color/success_green"
+                app:hintTextColor="@color/success_green"
+                android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etMinInput"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionNext"
+                    android:textColor="@color/navy_primary"
+                    android:textCursorDrawable="@null"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ── MAXIMUM LIMIT ────────────────────────────────────── -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="MAXIMUM SPENDING LIMIT" android:textStyle="bold"
+                android:textColor="@color/navy_primary" android:layout_marginTop="32dp"/>
+
+            <SeekBar android:id="@+id/seekBarMax"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:max="100000"
+                android:progress="0"
+                android:progressTint="@color/error_red"
+                android:progressBackgroundTint="#D0D0D0"
+                android:thumb="@drawable/seekbar_thumb_red"
+                android:splitTrack="false"
+                android:layout_marginTop="12dp"/>
+
+            <TextView android:id="@+id/tvMaxValue"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center" android:textSize="20sp" android:textStyle="bold"
+                android:textColor="@color/error_red"
+                android:layout_marginTop="4dp" android:text="R 0"/>
+
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilMaxInput"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:hint="Or enter amount (R)"
+                app:boxStrokeColor="@color/error_red"
+                app:hintTextColor="@color/error_red"
+                android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etMaxInput"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionDone"
+                    android:textColor="@color/navy_primary"
+                    android:textCursorDrawable="@null"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnSave"
+                android:layout_width="match_parent" android:layout_height="56dp"
+                android:text="SAVE BUDGET" android:textSize="16sp"
+                app:backgroundTint="@color/navy_primary" app:cornerRadius="8dp"
+                android:layout_marginTop="40dp"/>
+
+            <ProgressBar android:id="@+id/progressBar"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center" android:visibility="gone"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

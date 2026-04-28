@@ -17,7 +17,7 @@ import java.io.File
 class ViewReceiptActivity : AppCompatActivity() {
 
     private lateinit var b: ActivityViewReceiptBinding
-    private lateinit var vm: ExpenseViewModel
+    private lateinit var vm: ExpenseViewModel // im just testing commit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

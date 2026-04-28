@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reference: Smartherd, 2018. Android Kotlin Tutorial: Apply Material Design Themes to your App #5.4. [video online] Available at: <https://m.youtube.com/watch?v=oShPHVG3c9o&list=PLlxmoA0rQ-Lw5k_QCqVl3rsoJOnb_00UV&index=25&pp=iAQB0gcJCd8KAYcqIYzv> (Accessed 27 April 2026). -->
 <resources>
-    <style name="Theme.ClearCash" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.ClearCash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/navy_primary</item>
         <item name="colorPrimaryVariant">@color/blue_accent</item>
         <item name="colorOnPrimary">@color/white</item>

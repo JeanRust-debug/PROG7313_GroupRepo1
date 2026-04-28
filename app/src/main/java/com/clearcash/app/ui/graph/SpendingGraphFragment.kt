@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.clearcash.app.data.db.AppDatabase
@@ -76,9 +77,20 @@ class SpendingGraphFragment : Fragment() {
         val c  = Calendar.getInstance().also { it.timeInMillis = ts }
         DatePickerDialog(requireContext(), { _, y, m, d ->
             val nc = Calendar.getInstance().also { it.set(y, m, d) }
-            if (isStart) start = DateUtils.getStartOfDay(nc.timeInMillis)
-            else         end   = DateUtils.getEndOfDay(nc.timeInMillis)
-            updateBtns(); load()
+            val newStart = if (isStart) DateUtils.getStartOfDay(nc.timeInMillis) else start
+            val newEnd   = if (isStart) end else DateUtils.getEndOfDay(nc.timeInMillis)
+
+            // Validate the new range
+            if (newStart > newEnd) {
+                Toast.makeText(requireContext(),
+                    "Start date must be before end date", Toast.LENGTH_SHORT).show()
+                return@DatePickerDialog
+            }
+
+            start = newStart
+            end = newEnd
+            updateBtns()
+            load()
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
     }
 

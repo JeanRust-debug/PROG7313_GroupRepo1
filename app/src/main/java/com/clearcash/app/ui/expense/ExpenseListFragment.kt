@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -86,8 +87,18 @@ class ExpenseListFragment : Fragment() {
         val c  = Calendar.getInstance().also { it.timeInMillis = ts }
         DatePickerDialog(requireContext(), { _, y, m, d ->
             val nc = Calendar.getInstance().also { it.set(y, m, d) }
-            if (isStart) startDate = DateUtils.getStartOfDay(nc.timeInMillis)
-            else         endDate   = DateUtils.getEndOfDay(nc.timeInMillis)
+            val newStart = if (isStart) DateUtils.getStartOfDay(nc.timeInMillis) else startDate
+            val newEnd   = if (isStart) endDate else DateUtils.getEndOfDay(nc.timeInMillis)
+
+            // Validate the new range
+            if (newStart > newEnd) {
+                Toast.makeText(requireContext(),
+                    "Start date must be before end date", Toast.LENGTH_SHORT).show()
+                return@DatePickerDialog
+            }
+
+            startDate = newStart
+            endDate = newEnd
             updateDateBtns()
             loadList()
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()

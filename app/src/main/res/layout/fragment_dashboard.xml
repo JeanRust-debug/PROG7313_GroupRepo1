@@ -1,100 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/background">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:padding="16dp">
 
-        <TextView android:id="@+id/tvWelcome"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:text="Welcome!" android:textSize="18sp" android:textStyle="bold"
-            android:textColor="@color/navy_primary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView android:id="@+id/tvMonthLabel"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:text="April 2026" android:textSize="14sp" android:textColor="@color/text_secondary"
-            app:layout_constraintTop_toBottomOf="@id/tvWelcome"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="2dp"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:paddingBottom="80dp">
 
-        <androidx.cardview.widget.CardView android:id="@+id/cardBudget"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp" app:cardElevation="4dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvMonthLabel"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="16dp">
+            <!-- Navy header banner -->
+            <LinearLayout android:id="@+id/headerBanner"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/navy_primary"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="MONTHLY BUDGET:" android:textSize="12sp"
-                        android:textColor="@color/text_secondary"/>
-                    <TextView android:id="@+id/tvMonthlyBudget"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="R 0.00" android:textSize="14sp" android:textStyle="bold"
-                        android:textColor="@color/navy_primary"/>
-                </LinearLayout>
-
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="horizontal" android:layout_marginTop="8dp">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="SPENT:" android:textSize="12sp"
-                        android:textColor="@color/text_secondary"/>
-                    <TextView android:id="@+id/tvSpentAmount"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="R 0.00" android:textSize="14sp" android:textStyle="bold"
-                        android:textColor="@color/error_red"/>
-                </LinearLayout>
-
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="horizontal" android:layout_marginTop="8dp">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="REMAINING:" android:textSize="12sp"
-                        android:textColor="@color/text_secondary"/>
-                    <TextView android:id="@+id/tvRemainingAmount"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="R 0.00" android:textSize="14sp" android:textStyle="bold"
-                        android:textColor="@color/success_green"/>
-                </LinearLayout>
-
-                <ProgressBar android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent" android:layout_height="16dp"
-                    android:layout_marginTop="12dp" android:max="100"
-                    android:progressTint="@color/blue_accent"
-                    android:progressBackgroundTint="@color/background"/>
-
-                <TextView android:id="@+id/tvOverspendingAlert"
+                <TextView android:id="@+id/tvWelcome"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:text="⚠ OVERSPENDING ALERT!" android:textColor="@color/error_red"
-                    android:textStyle="bold" android:textSize="14sp"
-                    android:gravity="center" android:layout_marginTop="8dp"
-                    android:visibility="gone"/>
+                    android:text="Welcome!" android:textSize="24sp" android:textStyle="bold"
+                    android:textColor="@color/white"/>
+
+                <TextView android:id="@+id/tvMonthLabel"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="April 2026" android:textSize="13sp"
+                    android:textColor="#AABBDD"
+                    android:layout_marginTop="4dp"/>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddExpense"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_input_add"
-            app:backgroundTint="@color/navy_primary"
-            android:contentDescription="Add Expense"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="16dp" android:layout_marginEnd="16dp"
-            app:layout_constraintTop_toBottomOf="@id/cardBudget"
-            android:layout_marginTop="16dp"/>
+            <!-- Budget overview card (floats over header) -->
+            <androidx.cardview.widget.CardView android:id="@+id/cardBudget"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp" app:cardElevation="6dp"
+                app:cardBackgroundColor="#FFFFFF"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/headerBanner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-        <ProgressBar android:id="@+id/progressLoading"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Card accent strip -->
+                    <View android:layout_width="match_parent" android:layout_height="4dp"
+                        android:background="@color/navy_primary"/>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="vertical" android:padding="20dp">
+
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="MONTHLY OVERVIEW" android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:letterSpacing="0.12"
+                            android:layout_marginBottom="16dp"/>
+
+                        <!-- Budget row -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:gravity="center_vertical">
+                            <View android:layout_width="3dp" android:layout_height="16dp"
+                                android:background="@color/navy_primary"
+                                android:layout_marginEnd="10dp"/>
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Monthly Budget"
+                                android:textSize="14sp" android:textColor="#424242"/>
+                            <TextView android:id="@+id/tvMonthlyBudget"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="R 0.00" android:textSize="15sp" android:textStyle="bold"
+                                android:textColor="@color/navy_primary"/>
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:background="#F0F0F0" android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"/>
+
+                        <!-- Spent row -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:gravity="center_vertical">
+                            <View android:layout_width="3dp" android:layout_height="16dp"
+                                android:background="@color/error_red"
+                                android:layout_marginEnd="10dp"/>
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Spent"
+                                android:textSize="14sp" android:textColor="#424242"/>
+                            <TextView android:id="@+id/tvSpentAmount"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="R 0.00" android:textSize="15sp" android:textStyle="bold"
+                                android:textColor="@color/error_red"/>
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:background="#F0F0F0" android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"/>
+
+                        <!-- Remaining row -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:gravity="center_vertical">
+                            <View android:layout_width="3dp" android:layout_height="16dp"
+                                android:background="@color/success_green"
+                                android:layout_marginEnd="10dp"/>
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Remaining"
+                                android:textSize="14sp" android:textColor="#424242"/>
+                            <TextView android:id="@+id/tvRemainingAmount"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="R 0.00" android:textSize="15sp" android:textStyle="bold"
+                                android:textColor="@color/success_green"/>
+                        </LinearLayout>
+
+                        <!-- Progress bar -->
+                        <ProgressBar android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent" android:layout_height="10dp"
+                            android:layout_marginTop="20dp" android:max="100"
+                            android:progressTint="@color/navy_primary"
+                            android:progressBackgroundTint="#E8EAF0"/>
+
+                        <TextView android:id="@+id/tvOverspendingAlert"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="⚠ Overspending alert" android:textColor="@color/error_red"
+                            android:textStyle="bold" android:textSize="13sp"
+                            android:gravity="center" android:layout_marginTop="12dp"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <ProgressBar android:id="@+id/progressLoading"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/cardBudget"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="24dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddExpense"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:text="Add Expense"
+        android:textColor="#FFFFFF"
+        app:icon="@drawable/ic_add_24"
+        app:iconTint="#FFFFFF"
+        app:backgroundTint="@color/navy_primary"
+        android:contentDescription="Add Expense"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

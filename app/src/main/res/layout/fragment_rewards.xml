@@ -1,87 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/background">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="20dp">
+
+        <!-- Header -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp"
+                android:src="@drawable/ic_workspace_premium_24"
+                android:contentDescription="Achievements"/>
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Achievements" android:textSize="22sp" android:textStyle="bold"
+                android:textColor="@color/navy_primary"
+                android:layout_marginStart="12dp"/>
+        </LinearLayout>
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="REWARDS" android:textStyle="bold" android:textSize="20sp"
-            android:textColor="@color/navy_primary" android:gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:text="Track your financial milestones"
+            android:textSize="13sp" android:textColor="@color/text_secondary"/>
 
-        <!-- Badge 1 -->
+        <!-- Summary Card -->
         <androidx.cardview.widget.CardView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp" app:cardElevation="4dp" android:layout_marginBottom="16dp">
+            app:cardCornerRadius="12dp" app:cardElevation="3dp"
+            app:cardBackgroundColor="@color/navy_primary"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp">
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical">
-                <ImageView android:id="@+id/ivBadge1"
-                    android:layout_width="56dp" android:layout_height="56dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    android:contentDescription="Budget Saver Badge"/>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="BUDGET SAVER" android:textStyle="bold"
-                        android:textColor="@color/navy_primary" android:textSize="15sp"/>
-                    <TextView android:id="@+id/tvBadge1Status"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Stay under budget this month" android:textSize="12sp"
-                        android:textColor="@color/text_secondary"/>
-                </LinearLayout>
+                android:orientation="vertical" android:padding="20dp">
+
+                <TextView android:id="@+id/tvEarnedCount"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0 / 3 Achievements Unlocked"
+                    android:textSize="18sp" android:textStyle="bold"
+                    android:textColor="@color/white"/>
+
+                <ProgressBar android:id="@+id/pbAchievementOverall"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="8dp"
+                    android:layout_marginTop="12dp"
+                    android:max="3" android:progress="0"
+                    android:progressTint="@color/light_blue"
+                    android:progressBackgroundTint="#FFFFFF40"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Keep going — every milestone counts!"
+                    android:textSize="12sp" android:textColor="#CCDDFF"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Badge 2 -->
-        <androidx.cardview.widget.CardView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <!-- Badge 1: Budget Saver -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardBadge1"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp" app:cardElevation="4dp" android:layout_marginBottom="16dp">
+            app:cardCornerRadius="12dp" app:cardElevation="2dp"
+            app:cardBackgroundColor="#FFFFFF"
+            android:layout_marginBottom="12dp">
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical">
-                <ImageView android:id="@+id/ivBadge2"
-                    android:layout_width="56dp" android:layout_height="56dp"
-                    android:src="@android:drawable/ic_menu_edit"
-                    android:contentDescription="Expense Logger Badge"/>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="EXPENSE LOGGER" android:textStyle="bold"
-                        android:textColor="@color/navy_primary" android:textSize="15sp"/>
-                    <TextView android:id="@+id/tvBadge2Status"
+                android:orientation="vertical" android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+
+                    <ImageView android:id="@+id/ivBadge1"
+                        android:layout_width="48dp" android:layout_height="48dp"
+                        android:src="@drawable/ic_shield_check_24"
+                        android:alpha="0.25"
+                        android:contentDescription="Budget Saver"/>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Budget Saver" android:textSize="16sp" android:textStyle="bold"
+                            android:textColor="@color/navy_primary"/>
+                        <TextView android:id="@+id/tvBadge1Status"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Stay under budget this month"
+                            android:textSize="13sp" android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/tvBadge1Tag"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Log expenses for 7 days" android:textSize="12sp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="LOCKED"
+                        android:textSize="10sp" android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:background="#F0F0F0"
+                        android:paddingStart="8dp" android:paddingEnd="8dp"
+                        android:paddingTop="4dp" android:paddingBottom="4dp"/>
                 </LinearLayout>
+
+                <ProgressBar android:id="@+id/pbBadge1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="6dp"
+                    android:layout_marginTop="12dp"
+                    android:max="100" android:progress="0"
+                    android:progressTint="@color/navy_primary"
+                    android:progressBackgroundTint="#E0E0E0"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Badge 3 -->
-        <androidx.cardview.widget.CardView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <!-- Badge 2: Expense Logger -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardBadge2"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp" app:cardElevation="4dp">
+            app:cardCornerRadius="12dp" app:cardElevation="2dp"
+            app:cardBackgroundColor="#FFFFFF"
+            android:layout_marginBottom="12dp">
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical">
-                <ImageView android:id="@+id/ivBadge3"
-                    android:layout_width="56dp" android:layout_height="56dp"
-                    android:src="@android:drawable/ic_menu_save"
-                    android:contentDescription="Smart Spender Badge"/>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="SMART SPENDER" android:textStyle="bold"
-                        android:textColor="@color/navy_primary" android:textSize="15sp"/>
-                    <TextView android:id="@+id/tvBadge3Status"
+                android:orientation="vertical" android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+
+                    <ImageView android:id="@+id/ivBadge2"
+                        android:layout_width="48dp" android:layout_height="48dp"
+                        android:src="@drawable/ic_receipt_long_24"
+                        android:alpha="0.25"
+                        android:contentDescription="Expense Logger"/>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Expense Logger" android:textSize="16sp" android:textStyle="bold"
+                            android:textColor="@color/navy_primary"/>
+                        <TextView android:id="@+id/tvBadge2Status"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Log expenses for 7 days (0/7)"
+                            android:textSize="13sp" android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/tvBadge2Tag"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Save 30% of your budget" android:textSize="12sp"
-                        android:textColor="@color/text_secondary"/>
+                        android:text="LOCKED"
+                        android:textSize="10sp" android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:background="#F0F0F0"
+                        android:paddingStart="8dp" android:paddingEnd="8dp"
+                        android:paddingTop="4dp" android:paddingBottom="4dp"/>
                 </LinearLayout>
+
+                <ProgressBar android:id="@+id/pbBadge2"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="6dp"
+                    android:layout_marginTop="12dp"
+                    android:max="7" android:progress="0"
+                    android:progressTint="@color/navy_primary"
+                    android:progressBackgroundTint="#E0E0E0"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Badge 3: Smart Spender -->
+        <androidx.cardview.widget.CardView android:id="@+id/cardBadge3"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp" app:cardElevation="2dp"
+            app:cardBackgroundColor="#FFFFFF"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+
+                    <ImageView android:id="@+id/ivBadge3"
+                        android:layout_width="48dp" android:layout_height="48dp"
+                        android:src="@drawable/ic_account_balance_24"
+                        android:alpha="0.25"
+                        android:contentDescription="Smart Spender"/>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Smart Spender" android:textSize="16sp" android:textStyle="bold"
+                            android:textColor="@color/navy_primary"/>
+                        <TextView android:id="@+id/tvBadge3Status"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Save 30% of your budget this month"
+                            android:textSize="13sp" android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/tvBadge3Tag"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="LOCKED"
+                        android:textSize="10sp" android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:background="#F0F0F0"
+                        android:paddingStart="8dp" android:paddingEnd="8dp"
+                        android:paddingTop="4dp" android:paddingBottom="4dp"/>
+                </LinearLayout>
+
+                <ProgressBar android:id="@+id/pbBadge3"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="6dp"
+                    android:layout_marginTop="12dp"
+                    android:max="100" android:progress="0"
+                    android:progressTint="@color/navy_primary"
+                    android:progressBackgroundTint="#E0E0E0"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
