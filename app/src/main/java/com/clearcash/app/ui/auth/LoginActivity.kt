@@ -14,7 +14,7 @@ import com.clearcash.app.ui.main.MainActivity
 import com.clearcash.app.utils.SessionManager
 import kotlinx.coroutines.launch
 
-// Login screen — first screen the user sees if they are not already logged in
+// login screen. first screen the user sees if they are not already logged in
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
@@ -30,10 +30,10 @@ class LoginActivity : AppCompatActivity() {
         repository = ClearCashRepository(AppDatabase.getDatabase(this))
         session    = SessionManager(this)
 
-        // If a session is already saved, skip login and go straight to the app
+        // if a session is already saved. skip login go to app if its saved
         if (session.isLoggedIn()) { goToMain(); return }
 
-        // Validate inputs then attempt login
+        // this will validate inputs then attempt login
         binding.btnLogin.setOnClickListener {
             val user = binding.etUsername.text.toString().trim()
             val pass = binding.etPassword.text.toString().trim()
@@ -43,13 +43,13 @@ class LoginActivity : AppCompatActivity() {
             doLogin(user, pass)
         }
 
-        // Navigate to the registration screen
+        // navigate to the registration screen
         binding.tvCreateAccount.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
-    // Runs the login on a background coroutine and handles the result on the UI thread
+    // this will run the login on a background coroutine and handles the result on the UI thread
     private fun doLogin(username: String, password: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.btnLogin.isEnabled = false
@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // Navigate to MainActivity and clear the back stack so the user cannot go back to login
+    // navigate to mainActivity and clear the back stack so the user cannot go back to login
     private fun goToMain() {
         startActivity(Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

@@ -15,7 +15,7 @@ import com.clearcash.app.ui.main.MainActivity
 import com.clearcash.app.utils.SessionManager
 import kotlinx.coroutines.launch
 
-// Registration screen — allows a new user to create an account
+// registration screen. allows a new user to create an account
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
@@ -48,11 +48,11 @@ class RegisterActivity : AppCompatActivity() {
             doRegister(user, email, pass)
         }
 
-        // Go back to the login screen if the user already has an account
+        // this will go back to the login screen if the user already has an account
         binding.tvAlreadyRegistered.setOnClickListener { finish() }
     }
 
-    // Runs registration on a background coroutine and handles the result on the UI thread
+    // this runs registration on a background coroutine and handles th result on the UI thread
     private fun doRegister(username: String, email: String, password: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.btnSignUp.isEnabled = false
@@ -63,7 +63,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.btnSignUp.isEnabled = true
                 result.onSuccess { user ->
                     Log.d("RegisterActivity", "Registered userId=${user.id}")
-                    // Auto-login after registration and go straight to the app
+                    // this auto logins after registration and go straight to the app
                     session.saveSession(user.id, user.username)
                     startActivity(Intent(this@RegisterActivity, MainActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

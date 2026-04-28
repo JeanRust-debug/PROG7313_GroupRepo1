@@ -17,7 +17,7 @@ import com.clearcash.app.ui.auth.LoginActivity
 import com.clearcash.app.ui.budget.BudgetActivity
 import com.clearcash.app.utils.SessionManager
 
-// The main screen of the app — hosts all 5 fragments via bottom navigation
+// the main screen of the app — hosts all 5 fragments via bottom navigation
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -31,15 +31,15 @@ class MainActivity : AppCompatActivity() {
 
         session = SessionManager(this)
 
-        // Attach the toolbar as the app's action bar
+        // attach the toolbar as the app's action bar
         setSupportActionBar(binding.toolbar)
 
-        // Get the NavController from the NavHostFragment
+        // gets the NavController from the NavHostFragment
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // These are the top-level screens — no back arrow will show for them
+        // thesse are the top-level screens — no back arrow will show for them
         val topLevelDestinations = setOf(
             R.id.dashboardFragment,
             R.id.expenseListFragment,
@@ -48,21 +48,21 @@ class MainActivity : AppCompatActivity() {
             R.id.rewardsFragment
         )
 
-        // Connect the toolbar title to the current navigation destination
+        // conect the toolbar title to the current navigation destination
         val appBarConfig = AppBarConfiguration(topLevelDestinations)
         setupActionBarWithNavController(navController, appBarConfig)
 
-        // Connect the bottom navigation bar to the NavController
+        // connect the bottom navigation bar to the NavController
         binding.bottomNav.setupWithNavController(navController)
     }
 
-    // Inflate the options menu (Set Budget + Logout)
+    // inflate the options menu (Set Budget + Logout)
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
-    // Handle toolbar menu item clicks
+    // handle toolbar menu item clicks
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_budget -> {
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Show a confirmation dialog before logging the user out
+    // show a confirmation dialog before logging the user out
     private fun confirmLogout() {
         AlertDialog.Builder(this)
             .setTitle("Log Out")
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    // Handle the toolbar back arrow for sub-destinations
+    // handle the toolbar back arrow for sub-destinations
     override fun onSupportNavigateUp(): Boolean =
         navController.navigateUp() || super.onSupportNavigateUp()
 }
