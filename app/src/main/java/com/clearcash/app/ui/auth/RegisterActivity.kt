@@ -15,6 +15,7 @@ import com.clearcash.app.ui.main.MainActivity
 import com.clearcash.app.utils.SessionManager
 import kotlinx.coroutines.launch
 
+// Registration screen — allows a new user to create an account
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
@@ -36,19 +37,22 @@ class RegisterActivity : AppCompatActivity() {
             val pass    = binding.etPassword.text.toString().trim()
             val confirm = binding.etConfirm.text.toString().trim()
 
+            // Validate all fields before attempting registration
             var valid = true
-            if (user.length < 3)                              { binding.tilUsername.error = "Min 3 characters"; valid = false } else binding.tilUsername.error = null
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) { binding.tilEmail.error    = "Invalid email";    valid = false } else binding.tilEmail.error = null
-            if (pass.length < 6)                              { binding.tilPassword.error = "Min 6 characters"; valid = false } else binding.tilPassword.error = null
-            if (pass != confirm)                              { binding.tilConfirm.error  = "Passwords don't match"; valid = false } else binding.tilConfirm.error = null
+            if (user.length < 3)                                   { binding.tilUsername.error = "Min 3 characters";     valid = false } else binding.tilUsername.error = null
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())  { binding.tilEmail.error    = "Invalid email";        valid = false } else binding.tilEmail.error    = null
+            if (pass.length < 6)                                   { binding.tilPassword.error = "Min 6 characters";     valid = false } else binding.tilPassword.error = null
+            if (pass != confirm)                                   { binding.tilConfirm.error  = "Passwords don't match"; valid = false } else binding.tilConfirm.error  = null
             if (!valid) return@setOnClickListener
 
             doRegister(user, email, pass)
         }
 
+        // Go back to the login screen if the user already has an account
         binding.tvAlreadyRegistered.setOnClickListener { finish() }
     }
 
+    // Runs registration on a background coroutine and handles the result on the UI thread
     private fun doRegister(username: String, email: String, password: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.btnSignUp.isEnabled = false
@@ -59,6 +63,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.btnSignUp.isEnabled = true
                 result.onSuccess { user ->
                     Log.d("RegisterActivity", "Registered userId=${user.id}")
+                    // Auto-login after registration and go straight to the app
                     session.saveSession(user.id, user.username)
                     startActivity(Intent(this@RegisterActivity, MainActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

@@ -28,21 +28,22 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+// Screen where the user logs a new expense with amount, category, date, time and optional receipt photo
 class AddExpenseActivity : AppCompatActivity() {
 
     private lateinit var b: ActivityAddExpenseBinding
     private lateinit var vm: ExpenseViewModel
     private lateinit var session: SessionManager
 
-    private var selCategoryId: Long? = null
-    private var selDate = System.currentTimeMillis()
+    private var selCategoryId: Long? = null          // ID of the category chosen in the spinner
+    private var selDate = System.currentTimeMillis() // Default date is today
     private var startTime = ""
     private var endTime   = ""
-    private var receiptPath: String? = null
+    private var receiptPath: String? = null          // File path or URI of the attached receipt
     private var photoUri: Uri? = null
     private var hasCategories = false
 
-    // Camera launcher
+    // Launched after the camera finishes — checks if the photo was taken successfully
     private val camera = registerForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
         if (ok) {
             b.tvReceiptStatus.text = "✓ Receipt attached"
@@ -52,7 +53,7 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
-    // Camera permission launcher (Android 6+ runtime permission)
+    // Requests the CAMERA permission at runtime (required on Android 6 and above)
     private val cameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -62,7 +63,7 @@ class AddExpenseActivity : AppCompatActivity() {
             Toast.LENGTH_LONG).show()
     }
 
-    // Gallery launcher
+    // Launched when the user picks an image from the gallery
     private val gallery = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             receiptPath = it.toString()
@@ -75,6 +76,8 @@ class AddExpenseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityAddExpenseBinding.inflate(layoutInflater)
         setContentView(b.root)
+
+        // Set up toolbar with back button
         setSupportActionBar(b.toolbar)
         supportActionBar?.run { title = "Add Expense"; setDisplayHomeAsUpEnabled(true) }
 
@@ -83,9 +86,10 @@ class AddExpenseActivity : AppCompatActivity() {
             ClearCashRepository(AppDatabase.getDatabase(this))
         ))[ExpenseViewModel::class.java]
 
+        // Load the user's categories to populate the spinner
         vm.loadCategories(session.getUserId())
 
-        // Populate category spinner with custom layouts that have visible text
+        // Populate the category dropdown; prompt to create one if none exist
         vm.categories.observe(this) { cats ->
             hasCategories = cats.isNotEmpty()
             if (!hasCategories) {
@@ -103,6 +107,7 @@ class AddExpenseActivity : AppCompatActivity() {
             }
         }
 
+        // Close the screen when the expense is saved successfully
         vm.saveResult.observe(this) { result ->
             b.progressBar.visibility = View.GONE; b.btnSave.isEnabled = true
             result.onSuccess { finish() }
@@ -111,6 +116,7 @@ class AddExpenseActivity : AppCompatActivity() {
 
         updateDateBtn()
 
+        // Wire up all the button click listeners
         b.btnSelectDate.setOnClickListener { pickDate() }
         b.btnStartTime.setOnClickListener  { pickTime(true) }
         b.btnEndTime.setOnClickListener    { pickTime(false) }
@@ -119,6 +125,7 @@ class AddExpenseActivity : AppCompatActivity() {
         b.btnSave.setOnClickListener       { save() }
     }
 
+    // If the user has no categories, prompt them to create one before continuing
     private fun promptToCreateCategory() {
         AlertDialog.Builder(this)
             .setTitle("No Categories")
@@ -132,6 +139,7 @@ class AddExpenseActivity : AppCompatActivity() {
             .show()
     }
 
+    // Opens a date picker and stores the selected date as a timestamp
     private fun pickDate() {
         val c = Calendar.getInstance().also { it.timeInMillis = selDate }
         DatePickerDialog(this, { _, y, m, d ->
@@ -140,6 +148,7 @@ class AddExpenseActivity : AppCompatActivity() {
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
     }
 
+    // Opens a time picker; isStart=true sets the start time, false sets the end time
     private fun pickTime(isStart: Boolean) {
         val c = Calendar.getInstance()
         TimePickerDialog(this, { _, h, min ->
@@ -149,12 +158,13 @@ class AddExpenseActivity : AppCompatActivity() {
         }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show()
     }
 
+    // Updates the date button label to show the currently selected date
     private fun updateDateBtn() {
         b.btnSelectDate.text = "Date: ${DateUtils.formatForDisplay(selDate)}"
     }
 
+    // Checks for camera permission before launching the camera
     private fun takePhoto() {
-        // Check if we have CAMERA permission, request it if not
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_GRANTED) {
             launchCamera()
@@ -163,12 +173,14 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
+    // Creates a temporary image file and launches the camera to capture a receipt photo
     private fun launchCamera() {
         try {
             val ts = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-            dir?.mkdirs()  // Make sure directory exists before creating file
+            dir?.mkdirs()
             val file = File(dir, "REC_${ts}.jpg")
+            // FileProvider is required to share the file URI with the camera app securely
             photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", file)
             receiptPath = file.absolutePath
             camera.launch(photoUri)
@@ -178,6 +190,7 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
+    // Validates all fields and saves the expense to the database
     private fun save() {
         if (!hasCategories) {
             Toast.makeText(this, "Please create a category first", Toast.LENGTH_SHORT).show()
@@ -192,6 +205,7 @@ class AddExpenseActivity : AppCompatActivity() {
         if (desc.isEmpty()) { b.tilDescription.error = "Required"; return }
         b.tilAmount.error = null; b.tilDescription.error = null
 
+        // Ensure end time is not before start time
         if (startTime.isNotEmpty() && endTime.isNotEmpty() && endTime < startTime) {
             Toast.makeText(this, "End time must be after start time", Toast.LENGTH_SHORT).show()
             return
@@ -204,5 +218,6 @@ class AddExpenseActivity : AppCompatActivity() {
             description = desc, receiptPath = receiptPath))
     }
 
+    // Handle the toolbar back arrow
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 }
