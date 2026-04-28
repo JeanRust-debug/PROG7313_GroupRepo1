@@ -11,40 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up JDK (MATCHES your JVM 11 change)
       - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 11
 
-      # 3. Cache Gradle (safe version)
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
-      # 4. Make gradlew executable
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      # 5. Clean build (prevents your earlier cache error)
-      - name: Clean project
-        run: ./gradlew clean
+      - name: Clean Gradle safely
+        run: ./gradlew clean --no-build-cache
 
-      # 6. Run unit tests
       - name: Run tests
         run: ./gradlew test
 
-      # 7. Build debug APK
       - name: Build APK
         run: ./gradlew assembleDebug
