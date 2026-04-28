@@ -16,19 +16,25 @@ import com.clearcash.app.utils.SessionManager
 import java.text.NumberFormat
 import java.util.Locale
 
+// Screen where the user creates a new expense category with an optional spending limit
 class AddCategoryActivity : AppCompatActivity() {
 
     private lateinit var b: ActivityAddCategoryBinding
     private lateinit var vm: CategoryViewModel
     private lateinit var session: SessionManager
 
+    // Formats the limit value as South African Rand currency
     private val numFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
+
+    // Flag to prevent the seekbar and EditText from updating each other in a loop
     private var syncing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityAddCategoryBinding.inflate(layoutInflater)
         setContentView(b.root)
+
+        // Set up the toolbar with a back button
         setSupportActionBar(b.toolbar)
         supportActionBar?.run { title = "Add Category"; setDisplayHomeAsUpEnabled(true) }
 
@@ -37,12 +43,15 @@ class AddCategoryActivity : AppCompatActivity() {
             ClearCashRepository(AppDatabase.getDatabase(this))
         ))[CategoryViewModel::class.java]
 
+        // Seekbar max is R50 000; 0 means no limit set
         b.seekBarLimit.max = 50000
         b.tvLimitValue.text = "No limit"
 
+        // Update the display label and text input as the slider is dragged
         b.seekBarLimit.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 b.tvLimitValue.text = if (progress == 0) "No limit" else numFormat.format(progress)
+                // Sync the manual input field without triggering its TextWatcher
                 if (!syncing) {
                     syncing = true
                     b.etLimitInput.setText(if (progress == 0) "" else progress.toString())
@@ -54,11 +63,13 @@ class AddCategoryActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(sb: SeekBar?) {}
         })
 
+        // When the user types a number, move the seekbar to match
         b.etLimitInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!syncing) {
                     syncing = true
                     val value = s.toString().toDoubleOrNull() ?: 0.0
+                    // Clamp to the seekbar maximum so the slider doesn't go out of range
                     b.seekBarLimit.progress = value.coerceAtMost(50000.0).toInt()
                     syncing = false
                 }
@@ -67,6 +78,7 @@ class AddCategoryActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        // Observe the save result and show feedback to the user
         vm.saveResult.observe(this) { result ->
             b.progressBar.visibility = View.GONE; b.btnSave.isEnabled = true
             result.onSuccess { Toast.makeText(this, "Category saved!", Toast.LENGTH_SHORT).show(); finish() }
@@ -75,12 +87,15 @@ class AddCategoryActivity : AppCompatActivity() {
 
         b.btnSave.setOnClickListener {
             val name = b.etName.text.toString().trim()
+            // Validate that a name has been entered
             if (name.isEmpty()) { b.tilName.error = "Name required"; return@setOnClickListener }
             b.tilName.error = null
             b.progressBar.visibility = View.VISIBLE; b.btnSave.isEnabled = false
+            // Save the category with the current slider value as the spending limit
             vm.add(session.getUserId(), name, b.seekBarLimit.progress.toDouble())
         }
     }
 
+    // Handle the toolbar back arrow
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 }

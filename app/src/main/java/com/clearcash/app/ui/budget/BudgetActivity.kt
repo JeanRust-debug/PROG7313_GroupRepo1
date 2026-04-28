@@ -18,13 +18,17 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
+// Screen where the user sets their monthly minimum and maximum spending goals
 class BudgetActivity : AppCompatActivity() {
 
     private lateinit var b: ActivityBudgetBinding
     private lateinit var repo: ClearCashRepository
     private lateinit var session: SessionManager
+
+    // Formats numbers as South African Rand currency (e.g. R 1 500,00)
     private val numFormat = NumberFormat.getCurrencyInstance(Locale("en", "ZA"))
 
+    // Flags to prevent the seekbar and EditText from triggering each other in a loop
     private var syncingMin = false
     private var syncingMax = false
 
@@ -32,17 +36,21 @@ class BudgetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityBudgetBinding.inflate(layoutInflater)
         setContentView(b.root)
+
+        // Set up the toolbar with a back button
         setSupportActionBar(b.toolbar)
         supportActionBar?.run { title = "Monthly Budget Goals"; setDisplayHomeAsUpEnabled(true) }
 
         session = SessionManager(this)
         repo    = ClearCashRepository(AppDatabase.getDatabase(this))
 
-        // ── SeekBar: minimum goal ─────────────────────────────────────────────
+        // ── Minimum spending goal seekbar ─────────────────────────────────────
         b.seekBarMin.max = 100000
         b.seekBarMin.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, p: Int, u: Boolean) {
+                // Update the formatted display label as the slider moves
                 b.tvMinValue.text = numFormat.format(p)
+                // Sync the text input field without triggering its own watcher
                 if (!syncingMin) {
                     syncingMin = true
                     b.etMinInput.setText(if (p == 0) "" else p.toString())
@@ -54,11 +62,13 @@ class BudgetActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(sb: SeekBar?) {}
         })
 
+        // When the user types a number manually, move the min seekbar to match
         b.etMinInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!syncingMin) {
                     syncingMin = true
                     val value = s.toString().toDoubleOrNull() ?: 0.0
+                    // Clamp the value so it never exceeds the seekbar maximum
                     b.seekBarMin.progress = value.coerceAtMost(100000.0).toInt()
                     syncingMin = false
                 }
@@ -67,7 +77,7 @@ class BudgetActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        // ── SeekBar: maximum limit ────────────────────────────────────────────
+        // ── Maximum spending limit seekbar ────────────────────────────────────
         b.seekBarMax.max = 100000
         b.seekBarMax.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, p: Int, u: Boolean) {
@@ -83,6 +93,7 @@ class BudgetActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(sb: SeekBar?) {}
         })
 
+        // When the user types a number manually, move the max seekbar to match
         b.etMaxInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!syncingMax) {
@@ -96,21 +107,25 @@ class BudgetActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        // Load any previously saved budget for this month
         loadExisting()
 
         b.btnSave.setOnClickListener {
             val min = b.seekBarMin.progress.toDouble()
             val max = b.seekBarMax.progress.toDouble()
+            // Validate before saving
             if (max <= 0) { Toast.makeText(this, "Set a maximum budget", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
             if (min > max) { Toast.makeText(this, "Min cannot exceed Max", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
             save(min, max)
         }
     }
 
+    // Fetches the existing budget from the database and populates the UI
     private fun loadExisting() = lifecycleScope.launch {
         val budget = repo.getBudgetByMonth(session.getUserId(), DateUtils.getCurrentMonth(), DateUtils.getCurrentYear())
         runOnUiThread {
             if (budget != null) {
+                // Restore saved slider positions and text inputs
                 b.seekBarMin.progress = budget.minGoal.toInt()
                 b.seekBarMax.progress = budget.maxGoal.toInt()
                 b.tvMinValue.text     = numFormat.format(budget.minGoal)
@@ -118,12 +133,14 @@ class BudgetActivity : AppCompatActivity() {
                 b.etMinInput.setText(budget.minGoal.toInt().toString())
                 b.etMaxInput.setText(budget.maxGoal.toInt().toString())
             } else {
+                // No budget set yet — show zero
                 b.tvMinValue.text = numFormat.format(0)
                 b.tvMaxValue.text = numFormat.format(0)
             }
         }
     }
 
+    // Saves the budget to the database for the current month
     private fun save(min: Double, max: Double) {
         b.progressBar.visibility = View.VISIBLE; b.btnSave.isEnabled = false
         lifecycleScope.launch {
@@ -136,5 +153,6 @@ class BudgetActivity : AppCompatActivity() {
         }
     }
 
+    // Handle the toolbar back arrow
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
 }
