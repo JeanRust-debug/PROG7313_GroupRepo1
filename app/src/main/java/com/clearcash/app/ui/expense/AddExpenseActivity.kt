@@ -75,6 +75,7 @@ class AddExpenseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityAddExpenseBinding.inflate(layoutInflater)
         setContentView(b.root)
+        setSupportActionBar(b.toolbar)
         supportActionBar?.run { title = "Add Expense"; setDisplayHomeAsUpEnabled(true) }
 
         session = SessionManager(this)
