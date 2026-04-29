@@ -38,7 +38,7 @@ The application includes input validation to prevent errors and crashes. The int
 
 **Demonstration Video**  
 
-https://youtu.be/Gok8tN0hE_s  
+(https://youtu.be/J7QbA5XL120)  
 https://youtu.be/Gok8tN0hE_s  
 
 ---
