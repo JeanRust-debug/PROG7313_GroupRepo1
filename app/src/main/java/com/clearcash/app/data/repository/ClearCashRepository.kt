@@ -5,33 +5,73 @@ import androidx.lifecycle.LiveData
 import com.clearcash.app.data.db.AppDatabase
 import com.clearcash.app.data.db.dao.CategoryTotal
 import com.clearcash.app.data.db.entities.*
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 import java.security.MessageDigest
 
 open class ClearCashRepository(private val db: AppDatabase) {
 
     companion object { private const val TAG = "Repository" }
 
+    // Firebase Auth instance
+    private val firebaseAuth = FirebaseAuth.getInstance()
+
     // ── Auth ──────────────────────────────────────────────────────────────────
     open suspend fun registerUser(username: String, email: String, password: String): Result<User> {
         return try {
+            // Check username is unique in Room first
             if (db.userDao().usernameExists(username) > 0)
                 return Result.failure(Exception("Username already exists"))
-            if (db.userDao().emailExists(email) > 0)
-                return Result.failure(Exception("Email is already registered"))
-            val user = User(username = username, email = email, passwordHash = hash(password))
+
+            // Register with Firebase Auth
+            val firebaseResult = firebaseAuth
+                .createUserWithEmailAndPassword(email, password)
+                .await()
+            val firebaseUid = firebaseResult.user?.uid
+                ?: return Result.failure(Exception("Firebase registration failed"))
+
+            Log.d(TAG, "Firebase register OK uid=$firebaseUid")
+
+            // Save user profile locally in Room
+            val user = User(
+                username = username,
+                email = email,
+                passwordHash = hash(password),
+                firebaseUid = firebaseUid
+            )
             val id = db.userDao().insert(user)
-            Log.d(TAG, "Registered userId=$id")
+            Log.d(TAG, "Room register OK userId=$id")
             Result.success(user.copy(id = id))
-        } catch (e: Exception) { Result.failure(e) }
+        } catch (e: Exception) {
+            Log.e(TAG, "Register failed: ${e.message}")
+            Result.failure(e)
+        }
     }
 
     open suspend fun loginUser(username: String, password: String): Result<User> {
         return try {
+            // Get user from Room to find their email
+            val localUser = db.userDao().getUserByUsername(username)
+                ?: return Result.failure(Exception("Invalid username or password"))
+
+            // Login with Firebase Auth using their email
+            firebaseAuth.signInWithEmailAndPassword(localUser.email, password).await()
+            Log.d(TAG, "Firebase login OK uid=${firebaseAuth.currentUser?.uid}")
+
+            // Verify locally as well
             val user = db.userDao().login(username, hash(password))
                 ?: return Result.failure(Exception("Invalid username or password"))
+
             Log.d(TAG, "Login OK userId=${user.id}")
             Result.success(user)
-        } catch (e: Exception) { Result.failure(e) }
+        } catch (e: Exception) {
+            Log.e(TAG, "Login failed: ${e.message}")
+            Result.failure(Exception("Invalid username or password"))
+        }
+    }
+
+    open suspend fun logoutUser() {
+        firebaseAuth.signOut()
     }
 
     private fun hash(input: String): String {

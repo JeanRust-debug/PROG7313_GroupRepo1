@@ -9,7 +9,7 @@ import com.clearcash.app.data.db.entities.*
 
 @Database(
     entities = [User::class, Category::class, Expense::class, Budget::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -30,7 +30,6 @@ abstract class AppDatabase : RoomDatabase() {
                 ).fallbackToDestructiveMigration().build().also { INSTANCE = it }
             }
 
-        // Used only in tests — injects an in-memory database
         fun setTestDatabase(db: AppDatabase) { INSTANCE = db }
     }
 }
