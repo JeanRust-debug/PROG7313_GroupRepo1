@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/background">
+
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="vertical" android:padding="16dp">
 
@@ -39,12 +40,72 @@
             android:text="Total: R 0.00" android:textStyle="bold"
             android:textColor="@color/navy_primary" android:layout_marginTop="8dp"/>
 
+        <!-- ── Budget Goals Card ── -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="12dp">
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="MONTHLY BUDGET GOALS" android:textStyle="bold"
+                    android:textColor="@color/navy_primary" android:textSize="13sp"/>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:layout_marginTop="8dp">
+
+                    <!-- Min Goal -->
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:background="#E8F5E9" android:padding="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="MIN GOAL" android:textSize="11sp"
+                            android:textColor="#2E7D32" android:textStyle="bold"/>
+                        <TextView android:id="@+id/tvMinGoal"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="R 0.00" android:textSize="15sp"
+                            android:textColor="#2E7D32" android:textStyle="bold"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="8dp" android:layout_height="match_parent"/>
+
+                    <!-- Max Goal -->
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:background="#FFEBEE" android:padding="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="MAX GOAL" android:textSize="11sp"
+                            android:textColor="#C62828" android:textStyle="bold"/>
+                        <TextView android:id="@+id/tvMaxGoal"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="R 0.00" android:textSize="15sp"
+                            android:textColor="#C62828" android:textStyle="bold"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Goal status message -->
+                <TextView android:id="@+id/tvGoalStatus"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="" android:textSize="13sp" android:layout_marginTop="8dp"
+                    android:textStyle="bold" android:gravity="center"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="CATEGORY TOTALS" android:textStyle="bold"
             android:textColor="@color/navy_primary" android:layout_marginTop="16dp"/>
 
         <TextView android:id="@+id/tvCatList"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" android:layout_marginTop="8dp" android:lineSpacingExtra="4dp"/>
+            android:textColor="@color/text_primary" android:layout_marginTop="8dp"
+            android:lineSpacingExtra="4dp"/>
+
     </LinearLayout>
 </ScrollView>
