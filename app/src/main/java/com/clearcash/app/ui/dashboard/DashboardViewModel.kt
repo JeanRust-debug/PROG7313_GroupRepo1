@@ -5,6 +5,7 @@ import com.clearcash.app.data.db.entities.Budget
 import com.clearcash.app.data.db.entities.Category
 import com.clearcash.app.data.repository.ClearCashRepository
 import com.clearcash.app.utils.DateUtils
+import com.clearcash.app.utils.InsightsEngine
 import kotlinx.coroutines.launch
 
 data class CategorySpending(val category: Category, val spent: Double, val isOver: Boolean)
@@ -22,6 +23,9 @@ class DashboardViewModel(private val repo: ClearCashRepository) : ViewModel() {
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
+    private val _insight = MutableLiveData<String?>()
+    val insight: LiveData<String?> = _insight
+
     fun load(userId: Long) {
         _loading.value = true
         viewModelScope.launch {
@@ -38,6 +42,7 @@ class DashboardViewModel(private val repo: ClearCashRepository) : ViewModel() {
             val max = budget?.maxGoal ?: 0.0
             val pct = if (max > 0) ((total / max) * 100).toInt().coerceIn(0, 100) else 0
             _data.postValue(DashboardData(total, budget, catSpend, pct, max > 0 && total > max))
+            _insight.postValue(InsightsEngine.generate(total, budget, catSpend, pct))
             _loading.postValue(false)
         }
     }
