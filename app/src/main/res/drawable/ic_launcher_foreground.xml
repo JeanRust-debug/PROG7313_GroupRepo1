@@ -17,34 +17,38 @@
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.85"/>
 
-    <!-- Gold coin -->
+    <!-- Gold coin fill -->
     <path
         android:pathData="M76,68 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0"
         android:fillColor="#FFD54F"/>
+
+    <!-- Gold coin border -->
     <path
         android:pathData="M76,68 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0"
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#FFFFFF"
         android:strokeWidth="2"/>
 
-    <!-- R inside coin — vertical stroke -->
+    <!-- R inside coin: vertical stroke -->
     <path
         android:pathData="M73,62 L73,74"
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#E65100"
         android:strokeWidth="2"
         android:strokeLineCap="round"/>
-    <!-- R top arc -->
+
+    <!-- R inside coin: top arc -->
     <path
         android:pathData="M73,62 Q79,62 79,65 Q79,68 73,68"
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#E65100"
         android:strokeWidth="2"
         android:strokeLineCap="round"/>
-    <!-- R leg -->
+
+    <!-- R inside coin: diagonal leg -->
     <path
         android:pathData="M73,68 L79,74"
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#E65100"
         android:strokeWidth="2"
         android:strokeLineCap="round"/>
@@ -53,17 +57,19 @@
     <path
         android:pathData="M84,38 m-9,0 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0"
         android:fillColor="#FFFFFF"/>
-    <!-- Plus horizontal -->
+
+    <!-- Plus badge horizontal bar -->
     <path
         android:pathData="M80,38 L88,38"
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#E65100"
         android:strokeWidth="2.5"
         android:strokeLineCap="round"/>
-    <!-- Plus vertical -->
+
+    <!-- Plus badge vertical bar -->
     <path
         android:pathData="M84,34 L84,42"
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#E65100"
         android:strokeWidth="2.5"
         android:strokeLineCap="round"/>
