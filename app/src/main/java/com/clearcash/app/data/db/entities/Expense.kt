@@ -23,5 +23,7 @@ data class Expense(
     val endTime: String   = "",     // "HH:mm"
     val description: String,
     val receiptPath: String? = null, // File path or URI string for photo
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val isRecurring: Boolean = false,
+    val recurrenceType: String = ""   // "WEEKLY" or "MONTHLY" or ""
 )
