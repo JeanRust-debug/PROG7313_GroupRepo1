@@ -18,6 +18,7 @@ import com.clearcash.app.data.repository.ClearCashRepository
 import com.clearcash.app.databinding.ActivityMainBinding
 import com.clearcash.app.ui.auth.LoginActivity
 import com.clearcash.app.ui.budget.BudgetActivity
+import com.clearcash.app.ui.goals.GoalsActivity
 import com.clearcash.app.utils.RecurringExpenseManager
 import com.clearcash.app.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -80,6 +81,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_budget -> {
                 startActivity(Intent(this, BudgetActivity::class.java))
+                true
+            }
+            R.id.action_goals -> {
+                startActivity(Intent(this, GoalsActivity::class.java))
                 true
             }
             R.id.action_logout -> {
