@@ -54,6 +54,15 @@ class DashboardFragment : Fragment() {
             b.progressLoading.visibility = if (loading) View.VISIBLE else View.GONE
         }
 
+        vm.insight.observe(viewLifecycleOwner) { text ->
+            if (text != null) {
+                b.tvInsight.text = text
+                b.cardInsight.visibility = View.VISIBLE
+            } else {
+                b.cardInsight.visibility = View.GONE
+            }
+        }
+
         b.fabAddExpense.setOnClickListener {
             startActivity(Intent(requireContext(), AddExpenseActivity::class.java))
         }
