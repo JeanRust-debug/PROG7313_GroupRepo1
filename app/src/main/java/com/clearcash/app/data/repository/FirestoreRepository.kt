@@ -4,6 +4,7 @@ import android.util.Log
 import com.clearcash.app.data.db.entities.Budget
 import com.clearcash.app.data.db.entities.Category
 import com.clearcash.app.data.db.entities.Expense
+import com.clearcash.app.data.db.entities.SavingsGoal
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -82,6 +83,39 @@ class FirestoreRepository {
             Log.d(TAG, "Expense deleted from Firestore id=$expenseId")
         } catch (e: Exception) {
             Log.e(TAG, "Expense delete failed: ${e.message}")
+        }
+    }
+
+    // ── Savings Goals ─────────────────────────────────────────────────────────
+    suspend fun syncGoal(firebaseUid: String, goal: SavingsGoal) {
+        try {
+            db.collection("users")
+                .document(firebaseUid)
+                .collection("savings_goals")
+                .document(goal.id.toString())
+                .set(mapOf(
+                    "id"           to goal.id,
+                    "name"         to goal.name,
+                    "targetAmount" to goal.targetAmount,
+                    "savedAmount"  to goal.savedAmount,
+                    "createdAt"    to goal.createdAt
+                )).await()
+            Log.d(TAG, "SavingsGoal synced id=${goal.id}")
+        } catch (e: Exception) {
+            Log.e(TAG, "SavingsGoal sync failed: ${e.message}")
+        }
+    }
+
+    suspend fun deleteGoal(firebaseUid: String, goalId: Long) {
+        try {
+            db.collection("users")
+                .document(firebaseUid)
+                .collection("savings_goals")
+                .document(goalId.toString())
+                .delete().await()
+            Log.d(TAG, "SavingsGoal deleted from Firestore id=$goalId")
+        } catch (e: Exception) {
+            Log.e(TAG, "SavingsGoal delete failed: ${e.message}")
         }
     }
 

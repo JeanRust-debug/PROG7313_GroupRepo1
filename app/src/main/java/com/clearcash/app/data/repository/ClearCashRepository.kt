@@ -138,6 +138,28 @@ open class ClearCashRepository(private val db: AppDatabase) {
     open suspend fun getRecurringExpenses(userId: Long): List<Expense> =
         db.expenseDao().getRecurringByUser(userId)
 
+    // ── Savings Goals ─────────────────────────────────────────────────────────
+    open fun getGoals(userId: Long): LiveData<List<SavingsGoal>> =
+        db.savingsGoalDao().getGoalsByUser(userId)
+
+    open suspend fun addGoal(goal: SavingsGoal): Long {
+        val id = db.savingsGoalDao().insert(goal)
+        val saved = db.savingsGoalDao().getGoalsByUserOnce(goal.userId).firstOrNull { it.id == id }
+        saved?.let { firestoreRepo.syncGoal(getFirebaseUid(), it) }
+        return id
+    }
+
+    open suspend fun applyToGoal(goal: SavingsGoal, amount: Double) {
+        val updated = goal.copy(savedAmount = (goal.savedAmount + amount).coerceAtMost(goal.targetAmount))
+        db.savingsGoalDao().update(updated)
+        firestoreRepo.syncGoal(getFirebaseUid(), updated)
+    }
+
+    open suspend fun deleteGoal(goal: SavingsGoal) {
+        db.savingsGoalDao().delete(goal)
+        firestoreRepo.deleteGoal(getFirebaseUid(), goal.id)
+    }
+
     // ── Budget ────────────────────────────────────────────────────────────────
     open suspend fun getBudgetByMonth(userId: Long, month: Int, year: Int): Budget? =
         db.budgetDao().getBudgetByMonth(userId, month, year)
