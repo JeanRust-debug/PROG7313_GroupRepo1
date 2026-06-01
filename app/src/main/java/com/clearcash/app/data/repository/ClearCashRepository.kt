@@ -135,6 +135,9 @@ open class ClearCashRepository(private val db: AppDatabase) {
     open suspend fun getCategoryTotals(userId: Long, start: Long, end: Long): List<CategoryTotal> =
         db.expenseDao().getCategoryTotals(userId, start, end)
 
+    open suspend fun getRecurringExpenses(userId: Long): List<Expense> =
+        db.expenseDao().getRecurringByUser(userId)
+
     // ── Budget ────────────────────────────────────────────────────────────────
     open suspend fun getBudgetByMonth(userId: Long, month: Int, year: Int): Budget? =
         db.budgetDao().getBudgetByMonth(userId, month, year)
