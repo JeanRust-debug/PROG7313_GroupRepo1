@@ -54,15 +54,17 @@ class FirestoreRepository {
                 .collection("expenses")
                 .document(expense.id.toString())
                 .set(mapOf(
-                    "id"          to expense.id,
-                    "categoryId"  to expense.categoryId,
-                    "amount"      to expense.amount,
-                    "date"        to expense.date,
-                    "startTime"   to expense.startTime,
-                    "endTime"     to expense.endTime,
-                    "description" to expense.description,
-                    "receiptPath" to expense.receiptPath,
-                    "createdAt"   to expense.createdAt
+                    "id"             to expense.id,
+                    "categoryId"     to expense.categoryId,
+                    "amount"         to expense.amount,
+                    "date"           to expense.date,
+                    "startTime"      to expense.startTime,
+                    "endTime"        to expense.endTime,
+                    "description"    to expense.description,
+                    "receiptPath"    to expense.receiptPath,
+                    "createdAt"      to expense.createdAt,
+                    "isRecurring"    to expense.isRecurring,
+                    "recurrenceType" to expense.recurrenceType
                 )).await()
             Log.d(TAG, "Expense synced id=${expense.id}")
         } catch (e: Exception) {

@@ -111,12 +111,35 @@
                     android:textCursorDrawable="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Recurring expense checkbox -->
+            <CheckBox android:id="@+id/checkboxRecurring"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:text="Repeat this expense"
+                android:textSize="14sp" android:textColor="@color/navy_primary"
+                app:layout_constraintTop_toBottomOf="@id/tilDescription"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"
+                android:buttonTint="@color/navy_primary"/>
+
+            <!-- Recurrence type spinner — only visible when checkbox is checked -->
+            <Spinner android:id="@+id/spinnerRecurrence"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:popupBackground="#FFFFFF"
+                android:padding="4dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/checkboxRecurring"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="6dp"/>
+
             <TextView android:id="@+id/tvReceiptLabel"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Attach Receipt" android:textSize="13sp" android:textStyle="bold"
                 android:textColor="@color/navy_primary"
                 android:letterSpacing="0.05"
-                app:layout_constraintTop_toBottomOf="@id/tilDescription"
+                app:layout_constraintTop_toBottomOf="@id/spinnerRecurrence"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="20dp"/>
 
