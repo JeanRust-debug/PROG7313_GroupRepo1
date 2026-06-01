@@ -32,6 +32,7 @@ class ExpenseAdapter(
             b.btnViewReceipt.visibility =
                 if (!e.receiptPath.isNullOrEmpty()) View.VISIBLE else View.GONE
             b.btnViewReceipt.setOnClickListener { onReceipt(e) }
+            b.tvRecurring.visibility = if (e.isRecurring) View.VISIBLE else View.GONE
         }
     }
 

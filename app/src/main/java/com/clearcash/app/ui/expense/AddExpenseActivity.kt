@@ -42,6 +42,8 @@ class AddExpenseActivity : AppCompatActivity() {
     private var receiptPath: String? = null          //file path
     private var photoUri: Uri? = null
     private var hasCategories = false
+    private var isRecurring    = false
+    private var recurrenceType = ""
 
     // launched after the camera finishes. checks if the photo was taken successfully
     private val camera = registerForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
@@ -123,6 +125,25 @@ class AddExpenseActivity : AppCompatActivity() {
         b.btnTakePhoto.setOnClickListener  { takePhoto() }
         b.btnGallery.setOnClickListener    { gallery.launch("image/*") }
         b.btnSave.setOnClickListener       { save() }
+
+        // Recurring expense controls
+        val recurrenceOptions = listOf("Weekly", "Monthly")
+        b.spinnerRecurrence.adapter = ArrayAdapter(this, R.layout.spinner_item, recurrenceOptions)
+            .also { it.setDropDownViewResource(R.layout.spinner_dropdown_item) }
+        recurrenceType = "WEEKLY"
+
+        b.checkboxRecurring.setOnCheckedChangeListener { _, checked ->
+            isRecurring = checked
+            b.spinnerRecurrence.visibility = if (checked) View.VISIBLE else View.GONE
+            if (!checked) recurrenceType = ""
+        }
+
+        b.spinnerRecurrence.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p: AdapterView<*>?, v: View?, pos: Int, id: Long) {
+                recurrenceType = if (pos == 0) "WEEKLY" else "MONTHLY"
+            }
+            override fun onNothingSelected(p: AdapterView<*>?) {}
+        }
     }
 
     // if the user has no categories. prompt them to create one before continuing
@@ -215,7 +236,8 @@ class AddExpenseActivity : AppCompatActivity() {
         Log.d("AddExpense", "Saving expense amount=$amount category=$selCategoryId")
         vm.save(Expense(userId = session.getUserId(), categoryId = selCategoryId,
             amount = amount, date = selDate, startTime = startTime, endTime = endTime,
-            description = desc, receiptPath = receiptPath))
+            description = desc, receiptPath = receiptPath,
+            isRecurring = isRecurring, recurrenceType = recurrenceType))
     }
 
     // handle the toolbar back arrow
