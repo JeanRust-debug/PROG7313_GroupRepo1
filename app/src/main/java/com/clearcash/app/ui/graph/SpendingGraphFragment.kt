@@ -93,7 +93,7 @@ class SpendingGraphFragment : Fragment() {
                 b.tvNoData.visibility = View.GONE
                 val entries = d.labels.mapIndexed { i, name -> PieEntry(d.values[i], name) }
                 val ds = PieDataSet(entries, "").apply {
-                    colors = COLORS.take(entries.size)
+                    colors = entries.indices.map { COLORS[it % COLORS.size] }
                     valueFormatter = PercentFormatter(b.pieChart)
                     valueTextColor = Color.WHITE
                     valueTextSize = 11f
