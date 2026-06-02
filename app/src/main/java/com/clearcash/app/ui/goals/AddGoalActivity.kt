@@ -3,6 +3,7 @@ package com.clearcash.app.ui.goals
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.clearcash.app.data.db.AppDatabase
@@ -49,5 +50,23 @@ class AddGoalActivity : AppCompatActivity() {
         vm.addGoal(name, amount, session.getUserId())
     }
 
-    override fun onSupportNavigateUp(): Boolean { finish(); return true }
+    private fun confirmDiscard() {
+        val hasInput = b.etGoalName.text.toString().isNotEmpty() ||
+                b.etTargetAmount.text.toString().isNotEmpty()
+        if (hasInput) {
+            AlertDialog.Builder(this)
+                .setTitle("Discard changes?")
+                .setMessage("Your unsaved goal will be lost.")
+                .setPositiveButton("Discard") { _, _ -> finish() }
+                .setNegativeButton("Keep editing", null)
+                .show()
+        } else {
+            finish()
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean { confirmDiscard(); return true }
+
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() { confirmDiscard() }
 }
