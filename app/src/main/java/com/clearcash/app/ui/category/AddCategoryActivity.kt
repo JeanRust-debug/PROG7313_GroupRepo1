@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.clearcash.app.data.db.AppDatabase
@@ -99,6 +100,21 @@ class AddCategoryActivity : AppCompatActivity() {
         }
     }
 
-    // handle the toolbar back arrow
-    override fun onSupportNavigateUp(): Boolean { finish(); return true }
+    private fun confirmDiscard() {
+        if (b.etName.text.toString().isNotEmpty()) {
+            AlertDialog.Builder(this)
+                .setTitle("Discard changes?")
+                .setMessage("Your unsaved category will be lost.")
+                .setPositiveButton("Discard") { _, _ -> finish() }
+                .setNegativeButton("Keep editing", null)
+                .show()
+        } else {
+            finish()
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean { confirmDiscard(); return true }
+
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() { confirmDiscard() }
 }
