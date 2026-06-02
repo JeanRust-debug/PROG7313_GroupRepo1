@@ -6,11 +6,13 @@ import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.clearcash.app.data.db.AppDatabase
 import com.clearcash.app.data.repository.ClearCashRepository
 import com.clearcash.app.databinding.FragmentCategoryBinding
 import com.clearcash.app.utils.SessionManager
+import kotlinx.coroutines.launch
 
 class CategoryFragment : Fragment() {
 
@@ -25,15 +27,23 @@ class CategoryFragment : Fragment() {
     override fun onViewCreated(view: View, s: Bundle?) {
         super.onViewCreated(view, s)
         session = SessionManager(requireContext())
+        val db = AppDatabase.getDatabase(requireContext())
         vm = ViewModelProvider(this, CategoryViewModel.Factory(
-            ClearCashRepository(AppDatabase.getDatabase(requireContext()))
+            ClearCashRepository(db)
         ))[CategoryViewModel::class.java]
-
         val adapter = CategoryAdapter { cat ->
-            AlertDialog.Builder(requireContext())
-                .setTitle("Delete '${cat.name}'?")
-                .setPositiveButton("Delete") { _, _ -> vm.delete(cat) }
-                .setNegativeButton("Cancel", null).show()
+            viewLifecycleOwner.lifecycleScope.launch {
+                val count = db.expenseDao().getCountByCategory(cat.id)
+                val message = if (count > 0)
+                    "This will delete '${cat.name}'. Your $count expense(s) linked to it will become uncategorized."
+                else
+                    "Are you sure you want to delete '${cat.name}'?"
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete category?")
+                    .setMessage(message)
+                    .setPositiveButton("Delete") { _, _ -> vm.delete(cat) }
+                    .setNegativeButton("Cancel", null).show()
+            }
         }
         b.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         b.recyclerView.adapter = adapter

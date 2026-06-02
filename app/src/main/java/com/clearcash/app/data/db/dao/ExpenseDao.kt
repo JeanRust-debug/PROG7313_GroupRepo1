@@ -38,4 +38,7 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM expenses WHERE userId = :userId AND isRecurring = 1")
     suspend fun getRecurringByUser(userId: Long): List<Expense>
+
+    @Query("SELECT COUNT(*) FROM expenses WHERE categoryId = :categoryId")
+    suspend fun getCountByCategory(categoryId: Long): Int
 }
