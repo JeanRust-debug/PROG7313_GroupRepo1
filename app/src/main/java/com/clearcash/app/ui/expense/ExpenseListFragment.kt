@@ -113,7 +113,7 @@ class ExpenseListFragment : Fragment() {
         vm.getByPeriod(session.getUserId(), startDate, endDate)
             .observe(viewLifecycleOwner) { list ->
                 adapter.submitList(list)
-                binding.tvEmpty.visibility =
+                binding.layoutEmpty.visibility =
                     if (list.isEmpty()) View.VISIBLE else View.GONE
                 binding.tvTotal.text =
                     "Total: ${CurrencyFormatter.format(list.sumOf { it.amount })}"
