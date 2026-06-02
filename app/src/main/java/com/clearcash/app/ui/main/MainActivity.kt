@@ -37,12 +37,20 @@ class MainActivity : AppCompatActivity() {
 
         session = SessionManager(this)
 
-        // Auto-insert any recurring expenses due this period
+        // If the session userId no longer exists in the DB (e.g. after a DB wipe),
+        // clear the stale session and send the user back to login
         lifecycleScope.launch {
-            RecurringExpenseManager.process(
-                ClearCashRepository(AppDatabase.getDatabase(this@MainActivity)),
-                session.getUserId()
-            )
+            val db = AppDatabase.getDatabase(this@MainActivity)
+            val userId = session.getUserId()
+            if (userId == -1L || db.userDao().getUserById(userId) == null) {
+                session.clearSession()
+                startActivity(Intent(this@MainActivity, LoginActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
+                finish()
+                return@launch
+            }
+            RecurringExpenseManager.process(ClearCashRepository(db), userId)
         }
 
         // attach the toolbar as the app's action bar
