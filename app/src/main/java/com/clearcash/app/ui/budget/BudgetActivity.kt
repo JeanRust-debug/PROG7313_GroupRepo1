@@ -128,9 +128,17 @@ class BudgetActivity : AppCompatActivity() {
         b.btnSave.setOnClickListener {
             val min = b.seekBarMin.progress.toDouble()
             val max = b.seekBarMax.progress.toDouble()
-            // validate before saving
-            if (max <= 0) { Toast.makeText(this, "Set a maximum budget", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
-            if (min > max) { Toast.makeText(this, "Min cannot exceed Max", Toast.LENGTH_SHORT).show(); return@setOnClickListener }
+            b.tilMinInput.error = null
+            b.tilMaxInput.error = null
+            if (max <= 0) {
+                b.tilMaxInput.error = "Please set a maximum budget above zero"
+                b.etMaxInput.requestFocus()
+                return@setOnClickListener
+            }
+            if (min > max) {
+                b.tilMinInput.error = "Min goal cannot exceed the max limit"
+                return@setOnClickListener
+            }
             save(min, max)
         }
     }
