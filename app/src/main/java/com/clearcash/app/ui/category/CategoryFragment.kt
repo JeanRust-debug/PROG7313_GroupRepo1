@@ -50,7 +50,7 @@ class CategoryFragment : Fragment() {
 
         vm.getCategories(session.getUserId()).observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
-            b.tvEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+            b.layoutEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         }
 
         b.fabAdd.setOnClickListener {
