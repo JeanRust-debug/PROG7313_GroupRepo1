@@ -240,6 +240,25 @@ class AddExpenseActivity : AppCompatActivity() {
             isRecurring = isRecurring, recurrenceType = recurrenceType))
     }
 
-    // handle the toolbar back arrow
-    override fun onSupportNavigateUp(): Boolean { finish(); return true }
+    // shows a discard confirmation if the user has started entering data
+    private fun confirmDiscard() {
+        val hasInput = b.etAmount.text.toString().isNotEmpty() ||
+                b.etDescription.text.toString().isNotEmpty() ||
+                startTime.isNotEmpty() || receiptPath != null
+        if (hasInput) {
+            AlertDialog.Builder(this)
+                .setTitle("Discard changes?")
+                .setMessage("Your unsaved expense will be lost.")
+                .setPositiveButton("Discard") { _, _ -> finish() }
+                .setNegativeButton("Keep editing", null)
+                .show()
+        } else {
+            finish()
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean { confirmDiscard(); return true }
+
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() { confirmDiscard() }
 }
