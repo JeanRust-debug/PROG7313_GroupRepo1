@@ -35,4 +35,7 @@ interface ExpenseDao {
 
     @Query("SELECT categoryId, SUM(amount) as total FROM expenses WHERE userId = :userId AND date BETWEEN :startDate AND :endDate GROUP BY categoryId")
     suspend fun getCategoryTotals(userId: Long, startDate: Long, endDate: Long): List<CategoryTotal>
+
+    @Query("SELECT * FROM expenses WHERE userId = :userId AND isRecurring = 1")
+    suspend fun getRecurringByUser(userId: Long): List<Expense>
 }

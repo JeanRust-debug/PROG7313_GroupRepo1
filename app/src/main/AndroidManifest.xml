@@ -49,6 +49,13 @@
         <activity android:name=".ui.budget.BudgetActivity"
             android:exported="false" />
 
+        <activity android:name=".ui.goals.GoalsActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.goals.AddGoalActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- FileProvider for camera receipts -->
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -43,33 +43,71 @@ class SpendingGraphFragment : Fragment() {
         ))[GraphViewModel::class.java]
 
         b.pieChart.apply {
-            description.isEnabled = false; isDrawHoleEnabled = true; holeRadius = 40f
-            setHoleColor(Color.TRANSPARENT); setUsePercentValues(true)
-            setEntryLabelColor(Color.WHITE); setEntryLabelTextSize(11f)
+            description.isEnabled = false
+            isDrawHoleEnabled = true
+            holeRadius = 40f
+            setHoleColor(Color.TRANSPARENT)
+            setUsePercentValues(true)
+            setEntryLabelColor(Color.WHITE)
+            setEntryLabelTextSize(11f)
         }
 
         b.btnStart.setOnClickListener { pickDate(true) }
         b.btnEnd.setOnClickListener   { pickDate(false) }
 
+        // Observe graph data — updates chart AND goal displays
         vm.data.observe(viewLifecycleOwner) { d ->
             b.tvTotal.text = "Total: ${CurrencyFormatter.format(d.total)}"
-            if (d.labels.isEmpty()) { b.pieChart.visibility = View.GONE; b.tvNoData.visibility = View.VISIBLE; b.tvCatList.text = "" }
-            else {
-                b.pieChart.visibility = View.VISIBLE; b.tvNoData.visibility = View.GONE
+
+            // Display the min and max goals pulled from the budget
+            b.tvMinGoal.text = CurrencyFormatter.format(d.minGoal)
+            b.tvMaxGoal.text = CurrencyFormatter.format(d.maxGoal)
+
+            // Show a status message comparing total spending to the goals
+            when {
+                d.maxGoal <= 0.0 -> {
+                    b.tvGoalStatus.text = "No budget goals set for this month"
+                    b.tvGoalStatus.setTextColor(Color.parseColor("#757575"))
+                }
+                d.total > d.maxGoal -> {
+                    b.tvGoalStatus.text = "⚠ Over budget by ${CurrencyFormatter.format(d.total - d.maxGoal)}"
+                    b.tvGoalStatus.setTextColor(Color.parseColor("#C62828"))
+                }
+                d.minGoal > 0.0 && d.total < d.minGoal -> {
+                    b.tvGoalStatus.text = "ℹ Below minimum goal — keep tracking!"
+                    b.tvGoalStatus.setTextColor(Color.parseColor("#E65100"))
+                }
+                else -> {
+                    b.tvGoalStatus.text = "✓ Spending is within your goal range!"
+                    b.tvGoalStatus.setTextColor(Color.parseColor("#2E7D32"))
+                }
+            }
+
+            // Show or hide chart depending on whether there is data
+            if (d.labels.isEmpty()) {
+                b.pieChart.visibility = View.GONE
+                b.tvNoData.visibility = View.VISIBLE
+                b.tvCatList.text = ""
+            } else {
+                b.pieChart.visibility = View.VISIBLE
+                b.tvNoData.visibility = View.GONE
                 val entries = d.labels.mapIndexed { i, name -> PieEntry(d.values[i], name) }
                 val ds = PieDataSet(entries, "").apply {
                     colors = COLORS.take(entries.size)
                     valueFormatter = PercentFormatter(b.pieChart)
-                    valueTextColor = Color.WHITE; valueTextSize = 11f
+                    valueTextColor = Color.WHITE
+                    valueTextSize = 11f
                 }
-                b.pieChart.data = PieData(ds); b.pieChart.invalidate()
+                b.pieChart.data = PieData(ds)
+                b.pieChart.invalidate()
                 b.tvCatList.text = d.labels.mapIndexed { i, name ->
                     "• $name: ${CurrencyFormatter.format(d.values[i].toDouble())}"
                 }.joinToString("\n")
             }
         }
 
-        updateBtns(); load()
+        updateBtns()
+        load()
     }
 
     private fun pickDate(isStart: Boolean) {
@@ -79,14 +117,11 @@ class SpendingGraphFragment : Fragment() {
             val nc = Calendar.getInstance().also { it.set(y, m, d) }
             val newStart = if (isStart) DateUtils.getStartOfDay(nc.timeInMillis) else start
             val newEnd   = if (isStart) end else DateUtils.getEndOfDay(nc.timeInMillis)
-
-            // Validate the new range
             if (newStart > newEnd) {
                 Toast.makeText(requireContext(),
                     "Start date must be before end date", Toast.LENGTH_SHORT).show()
                 return@DatePickerDialog
             }
-
             start = newStart
             end = newEnd
             updateBtns()

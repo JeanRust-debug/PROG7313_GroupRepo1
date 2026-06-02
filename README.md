@@ -1,52 +1,81 @@
-**Budget Tracker App – Part 2 Prototype**
+# ClearCash – Budget Tracker App (Final PoE – Part 3)
 
-**Introduction**  
-This project is a Kotlin-based Android budget tracker application developed as part of Part 2 (App Prototype Development). The purpose of this prototype is to demonstrate core functionality, data handling, and user interaction features required for a personal budgeting system. The app allows users to manage their expenses efficiently through a structured and user-friendly interface.
-
----
-
-**Features (Part 2 Only)**  
-
-**User Authentication**  
-The app allows users to log in using a username and password. This ensures that user data is personalized and securely accessed.
-
-**Category Management**  
-Users can create and manage expense categories such as groceries, transport, and entertainment. These categories help organize spending.
-
-**Expense Entry Creation**  
-Users can add expense entries with detailed information including date, start time, end time, description, and category. This allows accurate tracking of spending activities.
-
-**Photo Attachment**  
-The app allows users to optionally attach a photo (such as a receipt) to each expense entry. These images can be stored and retrieved when viewing expenses.
-
-**Budget Goals (Minimum and Maximum)**  
-Users can set both minimum and maximum monthly spending goals. This helps users control their finances and monitor spending behavior.
-
-**View Expense Entries**  
-Users can view a list of all expense entries within a selected period. If an expense includes a photo, the user can access and view it directly from the list.
-
-**View Category Totals**  
-The app calculates and displays the total amount spent per category over a selected time period. This helps users analyze their spending patterns.
-
-**Local Data Storage (RoomDB)**  
-All user data, including expenses, categories, and goals, is stored locally using RoomDB (SQLite). This ensures data persistence even when the app is closed.
-
-**User-Friendly Interface and Validation**  
-The application includes input validation to prevent errors and crashes. The interface is designed to be simple, intuitive, and easy to navigate.
+## Introduction
+ClearCash is a Kotlin-based Android budget tracking application developed for Part 3 (Final App Development). The app allows users to manage expenses, track spending against budget goals, and store all data securely in Firebase Firestore (online database).
 
 ---
 
-**Demonstration Video**  
+## Features
 
-(https://youtu.be/J7QbA5XL120)  
-https://youtu.be/Gok8tN0hE_s  
+### Core Features (Carried over from Part 2)
+
+**User Authentication**
+Users register and log in with a username and password. Firebase Authentication handles secure login in the background.
+
+**Category Management**
+Users create and manage spending categories (e.g. groceries, transport). Categories are synced to Firestore.
+
+**Expense Entry**
+Users add expenses with date, time, description, category, and optional receipt photo. All expenses sync to Firestore.
+
+**Budget Goals**
+Users set a minimum and maximum monthly spending goal. These are stored in Firestore and used across the app.
+
+**View Expenses by Period**
+Users filter and view their expense list by a selected date range.
+
+**View Category Totals**
+The app calculates total spending per category over a selected period.
 
 ---
 
-**References**  
+### New Features (Part 3 Only)
 
-Karanpuria, R. and Roy, A.S. (2018) *Kotlin Programming Cookbook: Explore More Than 100 Recipes That Show How to Build Robust Mobile and Web Applications with Kotlin, Spring Boot, and Android.* Birmingham, UK: Packt Publishing. Available at: https://search-ebscohost-com.ezproxy.iielearn.ac.za/login.aspx?direct=true&db=e000xww&AN=1699229&site=ehost-live&scope=site [Accessed 20 August 2024].
+**Spending Graph with Min/Max Goals**
+The graph screen shows a pie chart of spending per category over a user-selectable period. Below the chart, the app displays the user's minimum and maximum budget goals for the current month, along with a status message showing whether they are on track, over budget, or below their minimum.
 
-Smartherd, 2019. *Kotlin Android Tutorial: Explore Activity, User Interface and Views #2.1.* [video online] Available at: https://m.youtube.com/watch?v=RpHXPIm9j6s&list=PLlxmoA0rQ-Lw5k_QCqVl3rsoJOnb_00UV&index=7&pp=0gcJCagCnhUGBSbi (Accessed 28 April 2026).
+**Visual Budget Goal Progress (Rewards Screen)**
+The rewards screen shows the user's progress toward three achievement badges based on their spending behaviour relative to their budget goals over the past month. Each badge shows a progress bar and is marked as earned or locked with colour-coded feedback (green = earned, grey = locked).
 
-Smartherd, 2018. *Android Kotlin Tutorial: Apply Material Design Themes to your App #5.4.* [video online] Available at: https://m.youtube.com/watch?v=oShPHVG3c9o&list=PLlxmoA0rQ-Lw5k_QCqVl3rsoJOnb_00UV&index=25&pp=iAQB0gcJCd8KAYcqIYzv (Accessed 27 April 2026).
+**Online Database (Firebase Firestore)**
+All categories, expenses, and budgets are synced to Firebase Firestore in real time. Data persists across devices and is tied to the user's Firebase account.
+
+---
+
+### Custom Own Features
+
+**Feature 1 – Achievement Badges / Rewards System**
+The Rewards screen awards users badges for meeting spending goals. The three badges are: Budget Saver (stayed under max goal), Expense Logger (logged expenses for 7 days), and Smart Spender (spent 30% under budget). Each badge shows a live progress bar so users can see how close they are. This feature encourages healthy financial habits through gamification.
+
+**Feature 2 – Receipt Photo Viewer**
+When adding an expense, users can optionally attach a photo of their receipt. The photo is saved locally and viewable from the expense list. This gives users a visual record of each purchase for later verification.
+
+---
+
+## GitHub Actions (Automated Testing)
+The repository uses GitHub Actions to automatically build the project and run unit tests on every push and pull request to `main`. The workflow file is located at `.github/workflows/android-ci.yml`.
+
+---
+
+## Online Database Evidence
+All data is stored in Firebase Firestore under each user's Firebase UID. The `FirestoreRepository.kt` class handles syncing categories, expenses, and budgets. The `google-services.json` file in the `app/` folder connects the app to the Firebase project.
+
+---
+
+## Demonstration Video
+[Watch the Part 3 demo video here](YOUR_YOUTUBE_LINK_HERE)
+
+---
+
+## App Icon
+The app uses a custom launcher icon (ClearCash logo) available in all mipmap densities: mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi.
+
+---
+
+## References
+
+Karanpuria, R. and Roy, A.S. (2018) *Kotlin Programming Cookbook.* Birmingham, UK: Packt Publishing. Available at: https://search-ebscohost-com.ezproxy.iielearn.ac.za/login.aspx?direct=true&db=e000xww&AN=1699229&site=ehost-live&scope=site [Accessed 20 August 2024].
+
+Smartherd (2019). *Kotlin Android Tutorial #2.1.* [video online] Available at: https://m.youtube.com/watch?v=RpHXPIm9j6s [Accessed 28 April 2026].
+
+Smartherd (2018). *Android Kotlin Tutorial: Apply Material Design Themes #5.4.* [video online] Available at: https://m.youtube.com/watch?v=oShPHVG3c9o [Accessed 27 April 2026].

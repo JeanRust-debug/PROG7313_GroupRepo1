@@ -6,16 +6,22 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.clearcash.app.R
+import com.clearcash.app.data.db.AppDatabase
+import com.clearcash.app.data.repository.ClearCashRepository
 import com.clearcash.app.databinding.ActivityMainBinding
 import com.clearcash.app.ui.auth.LoginActivity
 import com.clearcash.app.ui.budget.BudgetActivity
+import com.clearcash.app.ui.goals.GoalsActivity
+import com.clearcash.app.utils.RecurringExpenseManager
 import com.clearcash.app.utils.SessionManager
+import kotlinx.coroutines.launch
 
 // the main screen of the app — hosts all 5 fragments via bottom navigation
 class MainActivity : AppCompatActivity() {
@@ -30,6 +36,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         session = SessionManager(this)
+
+        // Auto-insert any recurring expenses due this period
+        lifecycleScope.launch {
+            RecurringExpenseManager.process(
+                ClearCashRepository(AppDatabase.getDatabase(this@MainActivity)),
+                session.getUserId()
+            )
+        }
 
         // attach the toolbar as the app's action bar
         setSupportActionBar(binding.toolbar)
@@ -67,6 +81,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_budget -> {
                 startActivity(Intent(this, BudgetActivity::class.java))
+                true
+            }
+            R.id.action_goals -> {
+                startActivity(Intent(this, GoalsActivity::class.java))
                 true
             }
             R.id.action_logout -> {
