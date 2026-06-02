@@ -63,7 +63,7 @@ All data is stored in Firebase Firestore under each user's Firebase UID. The `Fi
 ---
 
 ## Demonstration Video
-[Watch the Part 3 demo video here](YOUR_YOUTUBE_LINK_HERE)
+https://youtu.be/LtKQM_OC4hE 
 
 ---
 
