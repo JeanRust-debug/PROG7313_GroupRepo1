@@ -44,11 +44,11 @@ All categories, expenses, and budgets are synced to Firebase Firestore in real t
 
 ### Custom Own Features
 
-**Feature 1 – Achievement Badges / Rewards System**
-The Rewards screen awards users badges for meeting spending goals. The three badges are: Budget Saver (stayed under max goal), Expense Logger (logged expenses for 7 days), and Smart Spender (spent 30% under budget). Each badge shows a live progress bar so users can see how close they are. This feature encourages healthy financial habits through gamification.
+**Feature 1 – Interactive Budget and Expense Sliders**
+The application includes interactive sliders that allow users to enter budget amounts and expense values without manually typing numbers. Users can simply drag the slider to their desired amount, providing a faster and more intuitive way to manage financial information. The sliders also give immediate visual feedback, helping users make adjustments more easily and improving the overall user experience.
 
-**Feature 2 – Receipt Photo Viewer**
-When adding an expense, users can optionally attach a photo of their receipt. The photo is saved locally and viewable from the expense list. This gives users a visual record of each purchase for later verification.
+**Feature 2 – Recurring Expense Scheduler**
+Users can create recurring expenses for costs that occur on a regular basis, such as rent, subscriptions, or utility bills. The system automatically generates these expenses according to the selected schedule (e.g., daily, weekly, or monthly), reducing the need for manual entry. This helps users maintain accurate financial records and ensures that regular expenses are consistently tracked over time.
 
 ---
 
